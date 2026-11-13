@@ -146,11 +146,12 @@ function App() {
 
   const temperature = useMemo(() => {
     const warmth = Object.entries(outfit).reduce((total, [id, active]) => total + (active ? clothing[id].warmth : 0), 0)
-    const low = Math.round(26 - warmth * 2.2)
+    const bodyAdjustment = (75 - weight) * 0.04 + (gender === 'woman' ? 1 : -1)
+    const low = Math.round(26 - warmth * 2.2 + bodyAdjustment)
     const high = low + 8
-    const position = Math.min(78, Math.max(22, Math.round(52 - (warmth - 2.9) * 6)))
+    const position = Math.min(78, Math.max(22, Math.round(52 - (warmth - 2.9) * 6 + bodyAdjustment * 2)))
     return { low, high, min: low - 10, max: high + 8, feels: Math.round((low + high) / 2), position }
-  }, [outfit])
+  }, [gender, outfit, weight])
 
   function toggleClothing(id) {
     setOutfit((current) => ({ ...current, [id]: !current[id] }))
@@ -269,7 +270,7 @@ function App() {
 
           <div className="weather-note">
             <div className="note-icon" aria-hidden="true">☀</div>
-            <div><strong>A tiny forecast note</strong><p>This is a starting point. Wind, sunshine, and your own comfort can change the feeling.</p></div>
+            <div><strong>A tiny forecast note</strong><p>This rough estimate also factors in avatar selection and weight, assuming the same height. Wind, sun, and personal comfort still matter.</p></div>
           </div>
 
           <div className="quick-stats">
