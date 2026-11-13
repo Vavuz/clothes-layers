@@ -144,11 +144,12 @@ function GarmentPicker({ type, selectedIds, onToggle }) {
   )
 }
 
-function Avatar({ gender, hairstyle, outfit, weight }) {
+function Avatar({ age, gender, height, hairstyle, outfit, weight }) {
   const isWoman = gender === 'woman'
   const widthScale = weight <= 75
     ? 0.8 + ((weight - 45) / 30) * 0.2
     : 1 + ((weight - 75) / 65) * 0.35
+  const heightScale = 0.94 + ((height - 145) / 55) * 0.1
   const teeFill = outfit.tee === 'merino-tee' ? 'url(#knit)' : outfit.tee === 'thermal-tee' ? '#6e6c83' : outfit.tee === 'linen-shirt' ? '#9a876b' : outfit.tee === 'silk-blouse' ? '#987d95' : 'url(#tee)'
   const knitFill = outfit.knit === 'cotton-sweatshirt' ? '#7d9284' : outfit.knit === 'poly-fleece' ? '#596f9b' : outfit.knit === 'chunky-knit' ? '#96724d' : outfit.knit === 'cashmere-jumper' ? '#936f72' : 'url(#knit)'
   const jacketFill = outfit.jacket === 'denim-jacket' ? '#4f6e8d' : outfit.jacket === 'windbreaker' ? '#51908b' : outfit.jacket === 'wool-coat' ? '#8c6854' : outfit.jacket === 'puffer-jacket' ? '#a98746' : 'url(#jacket)'
@@ -157,7 +158,7 @@ function Avatar({ gender, hairstyle, outfit, weight }) {
   const bootFill = outfit.shoes === 'rain-boots' ? '#b78d49' : outfit.shoes === 'heavy-boots' ? '#5c4b3b' : outfit.shoes === 'shearling-boots' ? '#8b6852' : '#bd8b6a'
 
   return (
-    <svg className="avatar-art" viewBox="0 0 300 470" role="img" aria-label={`${gender} avatar with ${hairstyle} hair at ${weight} kilograms wearing the selected outfit`}>
+    <svg className="avatar-art" viewBox="0 0 300 470" role="img" aria-label={`${gender} avatar, age ${age}, height ${height} centimeters, with ${hairstyle} hair, wearing the selected outfit`}>
       <defs>
         <linearGradient id="skin" x1="0" x2="1" y1="0" y2="1">
           <stop offset="0" stopColor="#f4c9a8" />
@@ -188,7 +189,7 @@ function Avatar({ gender, hairstyle, outfit, weight }) {
         </filter>
       </defs>
       <ellipse cx="151" cy="452" rx="91" ry="12" fill="#d9e2d9" />
-      <g filter="url(#soft-shadow)" transform={`translate(150 0) scale(${widthScale} 1) translate(-150 0)`}>
+      <g filter="url(#soft-shadow)" transform={`translate(150 440) scale(${widthScale} ${heightScale}) translate(-150 -440)`}>
         <path d={isWoman ? 'M116 153h68l16 116H100z' : 'M100 153h100l-16 116h-68z'} fill="#f2c5a2" />
         {hairstyle === 'long' && <path d="M92 75c-5-29 12-55 44-57 32-2 57 16 59 49l-6 68-18-8-7-58-58 2-5 65-19-6z" fill="#49372f" />}
         <path d={isWoman ? 'M126 104h47v44c-9 12-37 12-47 0z' : 'M126 105h47v43c-9 12-37 12-47 0z'} fill="url(#skin)" />
@@ -288,6 +289,8 @@ function App() {
   const [gender, setGender] = useState('woman')
   const [hairstyle, setHairstyle] = useState('normal')
   const [weight, setWeight] = useState(75)
+  const [age, setAge] = useState(35)
+  const [height, setHeight] = useState(170)
   const [theme, setTheme] = useState(() => (
     window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   ))
@@ -306,12 +309,14 @@ function App() {
     }, 0)
     const hairWarmth = hairstyles.find((style) => style.id === hairstyle)?.warmth ?? 0
     const warmth = clothingWarmth + hairWarmth
-    const bodyAdjustment = (75 - weight) * 0.04 + (gender === 'woman' ? 1 : -1)
+    const ageAdjustment = -Math.max(0, age - 65) * 0.02
+    const heightAdjustment = (Math.pow(height / 170, 0.725) - 1) * 1.5
+    const bodyAdjustment = (75 - weight) * 0.04 + (gender === 'woman' ? 1 : -1) + ageAdjustment + heightAdjustment
     const low = Math.round(26 - warmth * 2.2 + bodyAdjustment)
     const high = low + 8
     const position = Math.min(78, Math.max(22, Math.round(52 - (warmth - 2.9) * 6 + bodyAdjustment * 2)))
     return { low, high, min: low - 10, max: high + 8, feels: Math.round((low + high) / 2), position }
-  }, [gender, hairstyle, outfit, weight])
+  }, [age, gender, height, hairstyle, outfit, weight])
 
   const selectedItems = Object.entries(outfit).flatMap(([type, selectedIds]) => {
     return selectedIds.flatMap((id) => {
@@ -408,7 +413,39 @@ function App() {
               onChange={(event) => setWeight(Number(event.target.value))}
             />
             <div className="weight-range"><span>45 kg</span><span>140 kg</span></div>
-            <p>Illustrative body shape at a fixed height.</p>
+            <p>Illustrative avatar proportions.</p>
+          </div>
+          <div className="weight-control">
+            <div className="weight-heading">
+              <label htmlFor="avatar-age">Age</label>
+              <output htmlFor="avatar-age">{age} years</output>
+            </div>
+            <input
+              id="avatar-age"
+              type="range"
+              min="18"
+              max="90"
+              step="1"
+              value={age}
+              onChange={(event) => setAge(Number(event.target.value))}
+            />
+            <div className="weight-range"><span>18 years</span><span>90 years</span></div>
+          </div>
+          <div className="weight-control">
+            <div className="weight-heading">
+              <label htmlFor="avatar-height">Height</label>
+              <output htmlFor="avatar-height">{height} cm</output>
+            </div>
+            <input
+              id="avatar-height"
+              type="range"
+              min="145"
+              max="200"
+              step="1"
+              value={height}
+              onChange={(event) => setHeight(Number(event.target.value))}
+            />
+            <div className="weight-range"><span>145 cm</span><span>200 cm</span></div>
           </div>
           <div className="hair-style-control">
             <label id="hair-style-label">Hair style</label>
@@ -426,7 +463,7 @@ function App() {
         <div className="avatar-stage">
           <div className="stage-note"><span className="live-dot" /> LIVE PREVIEW</div>
           <div className="avatar-halo" />
-          <Avatar gender={gender} hairstyle={hairstyle} outfit={avatarOutfit} weight={weight} />
+          <Avatar age={age} gender={gender} height={height} hairstyle={hairstyle} outfit={avatarOutfit} weight={weight} />
           <div className="avatar-caption"><span>{gender === 'woman' ? 'Maya' : 'Alex'}</span><small>ready for the day</small></div>
           <div className="outfit-chips" aria-label="Selected clothing">
             {selectedItems.map((item) => (
@@ -450,7 +487,7 @@ function App() {
 
           <div className="weather-note">
             <div className="note-icon" aria-hidden="true">☀</div>
-            <div><strong>A tiny forecast note</strong><p>This rough estimate includes your clothing, avatar selection, and weight (at the same height). Wind, sun, and personal comfort still matter.</p></div>
+            <div><strong>A tiny forecast note</strong><p>This playful estimate includes age, height, weight, hair, and clothing. It is not medical guidance; health, activity, humidity, and acclimation also affect comfort.</p></div>
           </div>
 
           <div className="quick-stats">
