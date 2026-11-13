@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 
 const clothing = {
@@ -32,10 +32,14 @@ function ToggleItem({ id, selected, onToggle, compact = false }) {
   )
 }
 
-function Avatar({ gender, outfit }) {
+function Avatar({ gender, outfit, weight }) {
   const isWoman = gender === 'woman'
+  const widthScale = weight <= 75
+    ? 0.8 + ((weight - 45) / 30) * 0.2
+    : 1 + ((weight - 75) / 65) * 0.35
+
   return (
-    <svg className="avatar-art" viewBox="0 0 300 470" role="img" aria-label={`${gender} avatar wearing the selected outfit`}>
+    <svg className="avatar-art" viewBox="0 0 300 470" role="img" aria-label={`${gender} avatar at ${weight} kilograms wearing the selected outfit`}>
       <defs>
         <linearGradient id="skin" x1="0" x2="1" y1="0" y2="1">
           <stop offset="0" stopColor="#f4c9a8" />
@@ -62,7 +66,7 @@ function Avatar({ gender, outfit }) {
         </filter>
       </defs>
       <ellipse cx="151" cy="452" rx="91" ry="12" fill="#d9e2d9" />
-      <g filter="url(#soft-shadow)">
+      <g filter="url(#soft-shadow)" transform={`translate(150 0) scale(${widthScale} 1) translate(-150 0)`}>
         {isWoman && <path d="M92 75c-5-29 12-55 44-57 32-2 57 16 59 49l-6 68-18-8-7-58-58 2-5 65-19-6z" fill="#49372f" />}
         <path d={isWoman ? 'M126 104h47v44c-9 12-37 12-47 0z' : 'M126 105h47v43c-9 12-37 12-47 0z'} fill="url(#skin)" />
         <path d="M104 158c12-12 29-18 46-18s34 6 46 18l21 131H82z" fill="#f2c5a2" />
@@ -130,7 +134,15 @@ function Avatar({ gender, outfit }) {
 
 function App() {
   const [gender, setGender] = useState('woman')
+  const [weight, setWeight] = useState(75)
+  const [theme, setTheme] = useState(() => (
+    window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  ))
   const [outfit, setOutfit] = useState({ hat: false, tee: true, knit: false, jacket: false, trousers: true, socks: false, shoes: true })
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+  }, [theme])
 
   const temperature = useMemo(() => {
     const warmth = Object.entries(outfit).reduce((total, [id, active]) => total + (active ? clothing[id].warmth : 0), 0)
@@ -152,9 +164,21 @@ function App() {
           <span>layer<span className="brand-period">.</span></span>
         </a>
         <span className="topbar-note">A little more comfortable, everywhere.</span>
-        <button className="reset-button" type="button" onClick={() => setOutfit({ hat: false, tee: true, knit: false, jacket: false, trousers: true, socks: false, shoes: true })}>
-          <span aria-hidden="true">↺</span> Reset outfit
-        </button>
+        <div className="topbar-actions">
+          <button
+            className="theme-toggle"
+            type="button"
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            aria-pressed={theme === 'dark'}
+            onClick={() => setTheme((current) => current === 'dark' ? 'light' : 'dark')}
+          >
+            <span className="theme-toggle-icon" aria-hidden="true">{theme === 'dark' ? '☼' : '☾'}</span>
+            <span>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
+          </button>
+          <button className="reset-button" type="button" onClick={() => setOutfit({ hat: false, tee: true, knit: false, jacket: false, trousers: true, socks: false, shoes: true })}>
+            <span aria-hidden="true">↺</span> Reset outfit
+          </button>
+        </div>
       </header>
 
       <section className="temperature-card" aria-label="Estimated temperature range">
@@ -191,6 +215,23 @@ function App() {
               </button>
             ))}
           </div>
+          <div className="weight-control">
+            <div className="weight-heading">
+              <label htmlFor="avatar-weight">Avatar weight</label>
+              <output htmlFor="avatar-weight">{weight} kg</output>
+            </div>
+            <input
+              id="avatar-weight"
+              type="range"
+              min="45"
+              max="140"
+              step="1"
+              value={weight}
+              onChange={(event) => setWeight(Number(event.target.value))}
+            />
+            <div className="weight-range"><span>45 kg</span><span>140 kg</span></div>
+            <p>Illustrative body shape at a fixed height.</p>
+          </div>
 
           <div className="section-rule" />
           <div className="category-heading"><span className="category-icon hat-icon" aria-hidden="true">⌒</span><div><h3>On your head</h3><span>One easy extra</span></div></div>
@@ -207,7 +248,7 @@ function App() {
         <div className="avatar-stage">
           <div className="stage-note"><span className="live-dot" /> LIVE PREVIEW</div>
           <div className="avatar-halo" />
-          <Avatar gender={gender} outfit={outfit} />
+          <Avatar gender={gender} outfit={outfit} weight={weight} />
           <div className="avatar-caption"><span>{gender === 'woman' ? 'Maya' : 'Alex'}</span><small>ready for the day</small></div>
           <div className="outfit-chips" aria-label="Selected clothing">
             {Object.entries(outfit).filter(([, selected]) => selected).map(([id]) => (

@@ -3,10 +3,11 @@
 }
 
 .app-shell {
-  width: min(1440px, 100%);
+  width: min(2240px, 100%);
   min-height: 100vh;
   margin: 0 auto;
   padding: 0 42px 21px;
+  color: var(--ink);
 }
 
 .topbar {
@@ -62,6 +63,38 @@
   color: #78867e;
   font-size: 13px;
   letter-spacing: .01em;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 13px;
+  border: 1px solid #e4e9e1;
+  border-radius: 9px;
+  background: rgba(255, 254, 250, .72);
+  color: #64736a;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background .2s, border-color .2s;
+}
+
+.theme-toggle:hover {
+  border-color: #bac9bd;
+  background: var(--paper);
+}
+
+.theme-toggle-icon {
+  color: var(--green);
+  font-size: 17px;
+  line-height: 12px;
 }
 
 .reset-button {
@@ -346,6 +379,52 @@ p {
 
 .person-icon.man {
   color: #d38b68;
+}
+
+.weight-control {
+  margin-top: 16px;
+  padding: 12px 13px 10px;
+  border: 1px solid #e8ece5;
+  border-radius: 10px;
+  background: #fbfcf8;
+}
+
+.weight-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: #53675a;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.weight-heading output {
+  color: #688372;
+  font-variant-numeric: tabular-nums;
+}
+
+.weight-control input {
+  display: block;
+  width: 100%;
+  height: 18px;
+  margin: 7px 0 2px;
+  accent-color: #688372;
+  cursor: pointer;
+}
+
+.weight-range {
+  display: flex;
+  justify-content: space-between;
+  color: #9aa39b;
+  font-size: 9px;
+}
+
+.weight-control p {
+  margin-top: 7px;
+  color: #9aa39b;
+  font-size: 9px;
+  line-height: 1.4;
 }
 
 .section-rule {
@@ -717,7 +796,432 @@ p {
   font-size: 9px;
 }
 
-@media (min-width: 1200px) {
+:root[data-theme='dark'] .topbar-note,
+:root[data-theme='dark'] .eyebrow,
+:root[data-theme='dark'] .temperature-intro p,
+:root[data-theme='dark'] .category-heading div > span,
+:root[data-theme='dark'] .option-detail,
+:root[data-theme='dark'] .weight-range,
+:root[data-theme='dark'] .weight-control p,
+:root[data-theme='dark'] .avatar-caption small,
+:root[data-theme='dark'] .page-footer {
+  color: #a4b0a7;
+}
+
+:root[data-theme='dark'] .reset-button,
+:root[data-theme='dark'] .theme-toggle {
+  border-color: #3b473f;
+  background: #222b25;
+  color: #c1ccc4;
+}
+
+:root[data-theme='dark'] .reset-button:hover,
+:root[data-theme='dark'] .theme-toggle:hover {
+  border-color: #63796a;
+  background: #2b362f;
+}
+
+:root[data-theme='dark'] .temperature-card {
+  border-color: #39453d;
+  background:
+    radial-gradient(ellipse at 92% 10%, rgba(162, 135, 80, .16), transparent 28%),
+    linear-gradient(110deg, #222b25 8%, #202923 73%, #292b23 100%);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, .14);
+}
+
+:root[data-theme='dark'] .temperature-intro h1,
+:root[data-theme='dark'] .panel-heading h2,
+:root[data-theme='dark'] .category-heading h3,
+:root[data-theme='dark'] .option-name,
+:root[data-theme='dark'] .avatar-caption span {
+  color: #e2ebe4;
+}
+
+:root[data-theme='dark'] .temperature-intro h1 em,
+:root[data-theme='dark'] .big-temp,
+:root[data-theme='dark'] .range-top strong,
+:root[data-theme='dark'] .weight-heading output {
+  color: #a8c6ae;
+}
+
+:root[data-theme='dark'] .metric-label,
+:root[data-theme='dark'] .range-top,
+:root[data-theme='dark'] .range-ends {
+  color: #a6b1a8;
+}
+
+:root[data-theme='dark'] .range-track {
+  background: linear-gradient(90deg, #46584b, #695e3f 52%, #705341);
+}
+
+:root[data-theme='dark'] .range-dot {
+  border-color: #242d27;
+}
+
+:root[data-theme='dark'] .control-panel,
+:root[data-theme='dark'] .weight-control {
+  border-color: #39453d;
+  background: #202923;
+  box-shadow: 0 6px 21px rgba(0, 0, 0, .12);
+}
+
+:root[data-theme='dark'] .gender-switch {
+  background: #171f1a;
+}
+
+:root[data-theme='dark'] .gender-switch button {
+  color: #a4b0a7;
+}
+
+:root[data-theme='dark'] .gender-switch button.active {
+  border-color: #3a473e;
+  background: #2b362f;
+  color: #dce8df;
+  box-shadow: none;
+}
+
+:root[data-theme='dark'] .section-rule {
+  background: #39453d;
+}
+
+:root[data-theme='dark'] .clothing-option:hover,
+:root[data-theme='dark'] .clothing-option.is-selected {
+  border-color: #435248;
+  background: #2a352d;
+}
+
+:root[data-theme='dark'] .option-check {
+  border-color: #4a594e;
+  color: #b7c3ba;
+}
+
+:root[data-theme='dark'] .is-selected .option-check {
+  border-color: #779681;
+  background: #779681;
+  color: #142018;
+}
+
+:root[data-theme='dark'] .avatar-stage {
+  border-color: #39453d;
+  background:
+    radial-gradient(ellipse at 50% 48%, rgba(94, 117, 96, .3), transparent 46%),
+    linear-gradient(180deg, #202923 0%, #1b241e 100%);
+}
+
+:root[data-theme='dark'] .avatar-halo {
+  border-color: rgba(160, 181, 157, .2);
+  background: radial-gradient(circle, rgba(218, 228, 213, .1), rgba(114, 139, 112, .08) 69%, transparent 70%);
+}
+
+:root[data-theme='dark'] .avatar-stage::before,
+:root[data-theme='dark'] .avatar-stage::after {
+  background: linear-gradient(transparent, rgba(184, 197, 182, .12), transparent);
+}
+
+:root[data-theme='dark'] .stage-note {
+  color: #a4b0a7;
+}
+
+:root[data-theme='dark'] .outfit-chip {
+  border-color: #445148;
+  background: rgba(34, 43, 37, .9);
+  color: #c2cec5;
+}
+
+:root[data-theme='dark'] .weather-note {
+  border-color: #514936;
+  background: #2c2a21;
+}
+
+:root[data-theme='dark'] .weather-note strong {
+  color: #d3c59e;
+}
+
+:root[data-theme='dark'] .weather-note p {
+  color: #b6aa89;
+}
+
+:root[data-theme='dark'] .quick-stats > div {
+  border-color: #39453d;
+  background: #242e27;
+}
+
+:root[data-theme='dark'] .quick-stats > div > span:nth-child(2) {
+  color: #a4b0a7;
+}
+
+:root[data-theme='dark'] .quick-stats strong {
+  color: #dce8df;
+}
+
+@media (min-width: 1600px) {
+  .app-shell {
+    padding: 0 clamp(48px, 4vw, 88px) 32px;
+  }
+
+  .topbar {
+    height: 96px;
+  }
+
+  .brand {
+    font-size: 29px;
+  }
+
+  .topbar-note {
+    font-size: 16px;
+  }
+
+  .theme-toggle,
+  .reset-button {
+    padding: 13px 17px;
+    font-size: 14px;
+  }
+
+  .temperature-card {
+    min-height: 220px;
+    gap: 58px;
+    padding: 38px 54px;
+    border-radius: 20px;
+  }
+
+  .temperature-intro h1 {
+    font-size: 40px;
+  }
+
+  .temperature-intro p {
+    font-size: 15px;
+  }
+
+  .eyebrow {
+    font-size: 12px;
+  }
+
+  .temperature-summary {
+    max-width: 900px;
+    gap: 50px;
+  }
+
+  .metric-label {
+    font-size: 11px;
+  }
+
+  .big-temp {
+    font-size: 58px;
+  }
+
+  .big-temp small {
+    font-size: 27px;
+  }
+
+  .range-top {
+    font-size: 14px;
+  }
+
+  .range-top strong {
+    font-size: 15px;
+  }
+
+  .range-track {
+    height: 8px;
+  }
+
+  .range-ends {
+    font-size: 11px;
+  }
+
+  .builder {
+    min-height: min(840px, calc(100vh - 420px));
+    grid-template-columns: minmax(350px, .92fr) minmax(480px, 1.08fr) minmax(350px, .92fr);
+    gap: 32px;
+    padding: 24px 0;
+  }
+
+  .control-panel {
+    padding: 32px;
+    border-radius: 20px;
+  }
+
+  .panel-heading {
+    margin-bottom: 24px;
+  }
+
+  .panel-heading h2 {
+    font-size: 28px;
+  }
+
+  .gender-switch {
+    gap: 9px;
+    padding: 5px;
+  }
+
+  .gender-switch button {
+    height: 48px;
+    font-size: 14px;
+  }
+
+  .person-icon {
+    font-size: 20px;
+  }
+
+  .weight-control {
+    margin-top: 20px;
+    padding: 16px 17px 13px;
+  }
+
+  .weight-heading {
+    font-size: 14px;
+  }
+
+  .weight-control input {
+    height: 24px;
+    margin-top: 10px;
+  }
+
+  .weight-range,
+  .weight-control p {
+    font-size: 11px;
+  }
+
+  .section-rule {
+    margin: 24px 0 19px;
+  }
+
+  .category-heading {
+    gap: 13px;
+    margin-bottom: 15px;
+  }
+
+  .category-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+  }
+
+  .category-heading h3 {
+    font-size: 16px;
+  }
+
+  .category-heading div > span {
+    font-size: 12px;
+  }
+
+  .clothing-option {
+    min-height: 76px;
+    gap: 13px;
+    padding: 10px 12px;
+    border-radius: 12px;
+  }
+
+  .item-mark {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+
+  .option-name {
+    font-size: 15px;
+  }
+
+  .option-detail {
+    font-size: 12px;
+  }
+
+  .option-check {
+    width: 22px;
+    height: 22px;
+    font-size: 14px;
+  }
+
+  .layer-tip {
+    margin-top: 15px;
+    font-size: 11px;
+  }
+
+  .avatar-stage {
+    min-height: min(82vh, 900px);
+    border-radius: 20px;
+  }
+
+  .avatar-halo {
+    top: 100px;
+    width: clamp(370px, 22vw, 510px);
+  }
+
+  .avatar-art {
+    width: clamp(440px, 26vw, 620px);
+    max-height: 710px;
+    margin-bottom: 84px;
+  }
+
+  .stage-note {
+    top: 26px;
+    left: 28px;
+    font-size: 10px;
+  }
+
+  .avatar-caption {
+    bottom: 56px;
+    gap: 10px;
+  }
+
+  .avatar-caption span {
+    font-size: 19px;
+  }
+
+  .avatar-caption small {
+    font-size: 12px;
+  }
+
+  .outfit-chips {
+    bottom: 20px;
+    gap: 6px;
+  }
+
+  .outfit-chip {
+    padding: 6px 11px;
+    font-size: 10px;
+  }
+
+  .weather-note {
+    gap: 13px;
+    margin-top: 24px;
+    padding: 16px;
+  }
+
+  .note-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .weather-note strong,
+  .weather-note p {
+    font-size: 12px;
+  }
+
+  .quick-stats {
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .quick-stats > div {
+    min-height: 74px;
+    padding: 11px 13px;
+  }
+
+  .quick-stats > div > span:nth-child(2) {
+    font-size: 10px;
+  }
+
+  .quick-stats strong {
+    font-size: 13px;
+  }
+
+  .page-footer {
+    font-size: 11px;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1599px) {
   .builder {
     grid-template-columns: minmax(270px, .92fr) minmax(340px, 1.08fr) minmax(270px, .92fr);
     gap: 24px;
@@ -728,6 +1232,10 @@ p {
   .app-shell {
     padding-right: 28px;
     padding-left: 28px;
+  }
+
+  .topbar-note {
+    display: none;
   }
 
   .builder {
@@ -798,6 +1306,10 @@ p {
   }
 
   .topbar-note {
+    display: none;
+  }
+
+  .theme-toggle > span:last-child {
     display: none;
   }
 

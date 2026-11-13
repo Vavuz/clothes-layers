@@ -2,8 +2,8 @@
 
 :root {
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
-  color: #273832;
-  background: #f3f5ef;
+  color: var(--ink);
+  background: var(--page-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -11,6 +11,7 @@
   font-optical-sizing: auto;
   font-weight: 400;
 
+  --page-bg: #f3f5ef;
   --ink: #273832;
   --muted: #85918a;
   --green: #5b7c6c;
@@ -18,6 +19,18 @@
   --paper: #fffefa;
   --line: #e8ebe4;
   --coral: #d9775c;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --page-bg: #151c18;
+  --ink: #e7eee8;
+  --muted: #a4b0a7;
+  --green: #99b9a2;
+  --green-dark: #bed6c3;
+  --paper: #222b25;
+  --line: #39453d;
+  --coral: #ed977c;
 }
 
 * {
@@ -28,6 +41,8 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: var(--page-bg);
+  color: var(--ink);
 }
 
 button,
