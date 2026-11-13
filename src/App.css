@@ -381,6 +381,56 @@ p {
   color: #d38b68;
 }
 
+.hair-style-control {
+  margin-top: 20px;
+}
+
+.hair-style-control > label {
+  display: block;
+  margin-bottom: 8px;
+  color: #53675a;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.hair-switch {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  padding: 4px;
+  border-radius: 10px;
+  background: #f2f4ee;
+}
+
+.hair-switch button {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 0 5px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: #87928a;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.hair-switch button small {
+  color: #99a59b;
+  font-size: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.hair-switch button.active {
+  border-color: #e7ebe3;
+  background: #fffefa;
+  color: #415b4c;
+  box-shadow: 0 2px 6px #4e675011;
+}
+
 .weight-control {
   margin-top: 16px;
   padding: 12px 13px 10px;
@@ -780,6 +830,19 @@ p {
   max-height: 470px;
   margin-bottom: 63px;
   overflow: visible;
+  animation: avatar-wiggle 4.8s ease-in-out infinite;
+  transform-origin: 50% 75%;
+}
+
+@keyframes avatar-wiggle {
+  0%,
+  100% {
+    transform: rotate(-.45deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(.45deg) translateY(-1.5px);
+  }
 }
 
 .avatar-caption {
@@ -977,11 +1040,25 @@ p {
   background: #171f1a;
 }
 
-:root[data-theme='dark'] .gender-switch button {
+:root[data-theme='dark'] .hair-switch {
+  background: #171f1a;
+}
+
+:root[data-theme='dark'] .hair-style-control > label {
+  color: #c2cec5;
+}
+
+:root[data-theme='dark'] .hair-switch button small {
   color: #a4b0a7;
 }
 
-:root[data-theme='dark'] .gender-switch button.active {
+:root[data-theme='dark'] .gender-switch button,
+:root[data-theme='dark'] .hair-switch button {
+  color: #a4b0a7;
+}
+
+:root[data-theme='dark'] .gender-switch button.active,
+:root[data-theme='dark'] .hair-switch button.active {
   border-color: #3a473e;
   background: #2b362f;
   color: #dce8df;
@@ -1414,6 +1491,11 @@ p {
     grid-column: 1;
   }
 
+  .right-panel > .layer-tip {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
   .right-panel .weather-note,
   .right-panel .quick-stats {
     grid-column: 2;
@@ -1560,5 +1642,9 @@ p {
   *::after {
     scroll-behavior: auto !important;
     transition-duration: .01ms !important;
+  }
+
+  .avatar-art {
+    animation: none;
   }
 }
