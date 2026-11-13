@@ -600,10 +600,31 @@ p {
   gap: 3px;
 }
 
+.option-name-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
 .option-name {
   color: #4a5a50;
   font-size: 12px;
   font-weight: 600;
+}
+
+.item-count {
+  display: grid;
+  min-width: 19px;
+  height: 19px;
+  place-items: center;
+  padding: 0 5px;
+  border: 1px solid #d5e0d5;
+  border-radius: 20px;
+  background: #e9efe8;
+  color: #49664f;
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
 }
 
 .option-detail {
@@ -1118,6 +1139,12 @@ p {
   color: #dce8df;
 }
 
+:root[data-theme='dark'] .item-count {
+  border-color: #506052;
+  background: #354139;
+  color: #c2d1c4;
+}
+
 :root[data-theme='dark'] .picker-item-detail {
   color: #a4b0a7;
 }
@@ -1221,6 +1248,12 @@ p {
 :root[data-theme='light'] .picker-item-name,
 :root[data-theme='light'] .avatar-caption span {
   color: #293d31;
+}
+
+:root[data-theme='light'] .item-count {
+  border-color: #aebfae;
+  background: #dfe8de;
+  color: #36573d;
 }
 
 :root[data-theme='light'] .temperature-intro h1 em {
