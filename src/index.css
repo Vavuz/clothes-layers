@@ -11,14 +11,18 @@
   font-optical-sizing: auto;
   font-weight: 400;
 
-  --page-bg: #f3f5ef;
-  --ink: #273832;
-  --muted: #85918a;
-  --green: #5b7c6c;
-  --green-dark: #385749;
+  --page-bg: #e6e9e3;
+  --ink: #25352d;
+  --muted: #58695e;
+  --green: #4f765e;
+  --green-dark: #315940;
   --paper: #fffefa;
-  --line: #e8ebe4;
-  --coral: #d9775c;
+  --line: #b9c6ba;
+  --coral: #cf684d;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
 }
 
 :root[data-theme='dark'] {

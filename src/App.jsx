@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 
 const clothing = {
@@ -96,6 +96,8 @@ function GarmentPicker({ type, selectedIds, onToggle }) {
   const category = clothing[type]
   const selectedItems = category.options.filter((item) => selectedIds.includes(item.id))
   const [search, setSearch] = useState('')
+  const [isOpen, setIsOpen] = useState(false)
+  const pickerRef = useRef(null)
   const matchingItems = category.options.filter((item) => (
     `${item.label} ${item.detail}`.toLowerCase().includes(search.trim().toLowerCase())
   ))
@@ -104,8 +106,24 @@ function GarmentPicker({ type, selectedIds, onToggle }) {
     ...matchingItems.filter((item) => !selectedIds.includes(item.id)),
   ]
 
+  useEffect(() => {
+    if (!isOpen) return undefined
+
+    function closeOnOutsideClick(event) {
+      if (!pickerRef.current?.contains(event.target)) setIsOpen(false)
+    }
+
+    document.addEventListener('pointerdown', closeOnOutsideClick)
+    return () => document.removeEventListener('pointerdown', closeOnOutsideClick)
+  }, [isOpen])
+
   return (
-    <details className={`clothing-option${selectedItems.length ? ' is-selected' : ''}`}>
+    <details
+      ref={pickerRef}
+      className={`clothing-option${selectedItems.length ? ' is-selected' : ''}`}
+      open={isOpen}
+      onToggle={(event) => setIsOpen(event.currentTarget.open)}
+    >
       <summary aria-label={`${category.label}, ${selectedItems.length} selected`}>
         <span className="item-mark" aria-hidden="true">{type === 'head' ? '⌒' : type === 'upperbody' ? '↟' : type === 'lowerbody' ? 'Ⅱ' : '◡'}</span>
         <span className="option-copy">
@@ -150,6 +168,7 @@ function Avatar({ age, gender, height, hairstyle, outfit, weight }) {
     ? 0.8 + ((weight - 45) / 30) * 0.2
     : 1 + ((weight - 75) / 65) * 0.35
   const heightScale = 0.94 + ((height - 145) / 55) * 0.1
+  const ageLineOpacity = Math.max(0, Math.min(0.55, ((age - 25) / 65) * 0.55))
   const teeFill = outfit.tee === 'merino-tee' ? 'url(#knit)' : outfit.tee === 'thermal-tee' ? '#6e6c83' : outfit.tee === 'linen-shirt' ? '#9a876b' : outfit.tee === 'silk-blouse' ? '#987d95' : 'url(#tee)'
   const knitFill = outfit.knit === 'cotton-sweatshirt' ? '#7d9284' : outfit.knit === 'poly-fleece' ? '#596f9b' : outfit.knit === 'chunky-knit' ? '#96724d' : outfit.knit === 'cashmere-jumper' ? '#936f72' : 'url(#knit)'
   const jacketFill = outfit.jacket === 'denim-jacket' ? '#4f6e8d' : outfit.jacket === 'windbreaker' ? '#51908b' : outfit.jacket === 'wool-coat' ? '#8c6854' : outfit.jacket === 'puffer-jacket' ? '#a98746' : 'url(#jacket)'
@@ -200,6 +219,10 @@ function Avatar({ age, gender, height, hairstyle, outfit, weight }) {
         <ellipse cx="135" cy="119" rx="2.2" ry="3" fill="#41312b" />
         <ellipse cx="168" cy="119" rx="2.2" ry="3" fill="#41312b" />
         <path d="M143 137c5 4 11 4 16 0" fill="none" stroke="#a95e53" strokeLinecap="round" strokeWidth="2.5" />
+        <g fill="none" stroke="#9e6758" strokeLinecap="round" strokeWidth="1.1" opacity={ageLineOpacity}>
+          <path d="M129 98c3-2 7-2 10-1M161 97c4-1 7-1 10 1" />
+          <path d="M126 117l-7-2M125 122l-7 2M174 117l7-2M175 122l7 2" />
+        </g>
         <circle cx="119" cy="131" r="7" fill="#e99f85" opacity=".38" />
         <circle cx="183" cy="131" r="7" fill="#e99f85" opacity=".38" />
         {outfit.hat && <g>
@@ -315,7 +338,9 @@ function App() {
     const low = Math.round(26 - warmth * 2.2 + bodyAdjustment)
     const high = low + 8
     const position = Math.min(78, Math.max(22, Math.round(52 - (warmth - 2.9) * 6 + bodyAdjustment * 2)))
-    return { low, high, min: low - 10, max: high + 8, feels: Math.round((low + high) / 2), position }
+    const feels = Math.round((low + high) / 2)
+    const hue = Math.round(Math.max(0, Math.min(220, 220 - (feels - 5) * 7)))
+    return { low, high, min: low - 10, max: high + 8, feels, position, hue }
   }, [age, gender, height, hairstyle, outfit, weight])
 
   const selectedItems = Object.entries(outfit).flatMap(([type, selectedIds]) => {
@@ -373,7 +398,7 @@ function App() {
         <div className="temperature-summary">
           <div className="feels-like">
             <span className="metric-label">FEELS COMFIEST AT</span>
-            <span className="big-temp">{temperature.feels}<small>°C</small></span>
+            <span className="big-temp" style={{ '--temperature-hue': temperature.hue }}>{temperature.feels}<small>°C</small></span>
           </div>
           <div className="temp-range">
             <div className="range-top"><span>Comfort zone</span><strong>{temperature.low}° — {temperature.high}°</strong></div>

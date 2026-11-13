@@ -211,7 +211,7 @@ p {
 }
 
 .big-temp {
-  color: #385749;
+  color: hsl(var(--temperature-hue, 140) 54% 34%);
   font: 600 42px/.95 'Manrope', sans-serif;
   letter-spacing: -.075em;
 }
@@ -1009,9 +1009,15 @@ p {
 }
 
 :root[data-theme='dark'] .temperature-intro h1 em,
-:root[data-theme='dark'] .big-temp,
-:root[data-theme='dark'] .range-top strong,
 :root[data-theme='dark'] .weight-heading output {
+  color: #a8c6ae;
+}
+
+:root[data-theme='dark'] .big-temp {
+  color: hsl(var(--temperature-hue, 140) 65% 70%);
+}
+
+:root[data-theme='dark'] .range-top strong {
   color: #a8c6ae;
 }
 
@@ -1167,6 +1173,183 @@ p {
 
 :root[data-theme='dark'] .quick-stats strong {
   color: #dce8df;
+}
+
+:root[data-theme='light'] .temperature-card {
+  border-color: #aebdae;
+  background:
+    radial-gradient(ellipse at 92% 10%, rgba(201, 168, 102, .16), transparent 30%),
+    linear-gradient(110deg, #f8faf5 8%, #f0f4ed 73%, #e8eee5 100%);
+  box-shadow: 0 10px 28px rgba(49, 75, 54, .1);
+}
+
+:root[data-theme='light'] .control-panel {
+  border-color: #a9b9aa;
+  background: #f9fbf7;
+  box-shadow: 0 8px 24px rgba(49, 75, 54, .1);
+}
+
+:root[data-theme='light'] .avatar-stage {
+  border-color: #a9b9aa;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(211, 227, 205, .84), transparent 48%),
+    linear-gradient(180deg, #f4f7f1 0%, #e7eee4 100%);
+  box-shadow: 0 8px 24px rgba(49, 75, 54, .08);
+}
+
+:root[data-theme='light'] .avatar-halo {
+  border-color: rgba(95, 126, 99, .42);
+  background: radial-gradient(circle, rgba(249, 251, 246, .8), rgba(203, 221, 196, .36) 69%, transparent 70%);
+}
+
+:root[data-theme='light'] .topbar-note,
+:root[data-theme='light'] .eyebrow,
+:root[data-theme='light'] .temperature-intro p,
+:root[data-theme='light'] .option-detail,
+:root[data-theme='light'] .picker-item-detail,
+:root[data-theme='light'] .weight-range,
+:root[data-theme='light'] .weight-control p,
+:root[data-theme='light'] .avatar-caption small,
+:root[data-theme='light'] .stage-note,
+:root[data-theme='light'] .page-footer {
+  color: #65756a;
+}
+
+:root[data-theme='light'] .temperature-intro h1,
+:root[data-theme='light'] .panel-heading h2,
+:root[data-theme='light'] .option-name,
+:root[data-theme='light'] .picker-item-name,
+:root[data-theme='light'] .avatar-caption span {
+  color: #293d31;
+}
+
+:root[data-theme='light'] .temperature-intro h1 em {
+  color: #527b5d;
+}
+
+:root[data-theme='light'] .metric-label,
+:root[data-theme='light'] .range-top {
+  color: #5f7064;
+}
+
+:root[data-theme='light'] .range-ends {
+  color: #65756a;
+}
+
+:root[data-theme='light'] .range-ends b {
+  color: #425d49;
+}
+
+:root[data-theme='light'] .theme-toggle,
+:root[data-theme='light'] .reset-button {
+  border-color: #aabaaa;
+  background: #f8faf6;
+  color: #435b49;
+}
+
+:root[data-theme='light'] .theme-toggle:hover,
+:root[data-theme='light'] .reset-button:hover {
+  border-color: #a9c1aa;
+  background: #f7faf5;
+}
+
+:root[data-theme='light'] .gender-switch,
+:root[data-theme='light'] .hair-switch {
+  background: #e0e7df;
+}
+
+:root[data-theme='light'] .gender-switch button,
+:root[data-theme='light'] .hair-switch button {
+  color: #5d7062;
+}
+
+:root[data-theme='light'] .gender-switch button.active,
+:root[data-theme='light'] .hair-switch button.active {
+  border-color: #aebfae;
+  background: #f8faf6;
+  color: #355a40;
+  box-shadow: 0 2px 6px rgba(52, 83, 58, .12);
+}
+
+:root[data-theme='light'] .weight-control {
+  border-color: #aebfae;
+  background: #edf2ed;
+}
+
+:root[data-theme='light'] .weight-heading,
+:root[data-theme='light'] .hair-style-control > label {
+  color: #465e4d;
+}
+
+:root[data-theme='light'] .weight-heading output {
+  color: #426c4d;
+}
+
+:root[data-theme='light'] .section-rule {
+  background: #dfe7df;
+}
+
+:root[data-theme='light'] .clothing-option:hover,
+:root[data-theme='light'] .clothing-option.is-selected {
+  border-color: #a9bda9;
+  background: #edf3eb;
+}
+
+:root[data-theme='light'] .picker-list {
+  border-color: #9faf9f;
+  background: #f9fbf7;
+  box-shadow: 0 12px 28px rgba(38, 59, 43, .2);
+}
+
+:root[data-theme='light'] .picker-search-wrap {
+  background: #f9fbf7;
+}
+
+:root[data-theme='light'] .picker-search {
+  border-color: #aebfae;
+  background: #edf2ed;
+  color: #293d31;
+}
+
+:root[data-theme='light'] .picker-item:hover,
+:root[data-theme='light'] .picker-item.is-checked {
+  background: #e5eee3;
+}
+
+:root[data-theme='light'] .warmth-rating {
+  color: #4b7453;
+}
+
+:root[data-theme='light'] .outfit-chip {
+  border-color: #aebfae;
+  background: rgba(248, 250, 246, .96);
+  color: #526b57;
+}
+
+:root[data-theme='light'] .weather-note {
+  border-color: #c9bc95;
+  background: #f0ead8;
+}
+
+:root[data-theme='light'] .weather-note strong {
+  color: #645532;
+}
+
+:root[data-theme='light'] .weather-note p {
+  color: #71674e;
+}
+
+:root[data-theme='light'] .quick-stats > div {
+  border-color: #aebfae;
+  background: #edf2ed;
+}
+
+:root[data-theme='light'] .quick-stats > div > span:nth-child(2) {
+  color: #637469;
+}
+
+:root[data-theme='light'] .quick-stats strong {
+  color: #354f3b;
 }
 
 @media (min-width: 1600px) {
