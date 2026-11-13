@@ -481,22 +481,20 @@ p {
 .clothing-option {
   display: flex;
   width: 100%;
-  min-height: 58px;
+  min-height: 92px;
   align-items: center;
   gap: 10px;
-  padding: 7px 8px;
+  padding: 9px 8px;
   border: 1px solid transparent;
   border-radius: 10px;
   background: transparent;
-  cursor: pointer;
   text-align: left;
-  transition: background .18s, border-color .18s, transform .18s;
+  transition: background .18s, border-color .18s;
 }
 
 .clothing-option:hover {
   border-color: #e7ebe4;
   background: #fafbf7;
-  transform: translateY(-1px);
 }
 
 .clothing-option.is-selected {
@@ -560,24 +558,24 @@ p {
   white-space: nowrap;
 }
 
-.option-check {
-  display: grid;
-  width: 18px;
-  height: 18px;
-  flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid #e1e6df;
-  border-radius: 6px;
-  color: #a7b0a7;
-  font-size: 12px;
-  line-height: 1;
+.clothing-option select {
+  width: 100%;
+  min-width: 0;
+  height: 34px;
+  margin-top: 5px;
+  padding: 0 9px;
+  border: 1px solid #e1e7df;
+  border-radius: 7px;
+  background: #fffefa;
+  color: #4a5a50;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
 }
 
-.is-selected .option-check {
-  border-color: #688372;
-  background: #688372;
-  color: white;
-  font-size: 11px;
+.clothing-option select:focus-visible {
+  outline: 2px solid #7e9c85;
+  outline-offset: 2px;
 }
 
 .option-stack {
@@ -890,15 +888,10 @@ p {
   background: #2a352d;
 }
 
-:root[data-theme='dark'] .option-check {
-  border-color: #4a594e;
-  color: #b7c3ba;
-}
-
-:root[data-theme='dark'] .is-selected .option-check {
-  border-color: #779681;
-  background: #779681;
-  color: #142018;
+:root[data-theme='dark'] .clothing-option select {
+  border-color: #465349;
+  background: #1b241e;
+  color: #dce8df;
 }
 
 :root[data-theme='dark'] .avatar-stage {
@@ -1106,7 +1099,7 @@ p {
   }
 
   .clothing-option {
-    min-height: 76px;
+    min-height: 106px;
     gap: 13px;
     padding: 10px 12px;
     border-radius: 12px;
@@ -1126,10 +1119,9 @@ p {
     font-size: 12px;
   }
 
-  .option-check {
-    width: 22px;
-    height: 22px;
-    font-size: 14px;
+  .clothing-option select {
+    height: 39px;
+    font-size: 12px;
   }
 
   .layer-tip {
