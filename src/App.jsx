@@ -89,6 +89,10 @@ function makeDefaultOutfit() {
 function GarmentPicker({ type, selectedIds, onToggle }) {
   const category = clothing[type]
   const selectedItems = category.options.filter((item) => selectedIds.includes(item.id))
+  const [search, setSearch] = useState('')
+  const searchResults = category.options.filter((item) => (
+    `${item.label} ${item.detail}`.toLowerCase().includes(search.trim().toLowerCase())
+  ))
 
   return (
     <details className={`clothing-option${selectedItems.length ? ' is-selected' : ''}`}>
@@ -101,7 +105,17 @@ function GarmentPicker({ type, selectedIds, onToggle }) {
         <span className="picker-chevron" aria-hidden="true">⌄</span>
       </summary>
       <div className="picker-list">
-        {category.options.map((item) => (
+        <div className="picker-search-wrap">
+          <input
+            className="picker-search"
+            type="search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder={`Search ${category.label.toLowerCase()}...`}
+            aria-label={`Search ${category.label}`}
+          />
+        </div>
+        {searchResults.length ? searchResults.map((item) => (
           <label className="picker-item" key={item.id}>
             <input
               type="checkbox"
@@ -114,7 +128,7 @@ function GarmentPicker({ type, selectedIds, onToggle }) {
             </span>
             <span className="warmth-rating" aria-label={`${item.warmth} warmth`}>+{item.warmth.toFixed(1)}</span>
           </label>
-        ))}
+        )) : <p className="picker-empty">No items match “{search}”.</p>}
       </div>
     </details>
   )
@@ -155,15 +169,19 @@ function Avatar({ gender, outfit, weight }) {
           <stop offset="0" stopColor="#526b79" />
           <stop offset="1" stopColor="#344c5a" />
         </linearGradient>
+        <mask id="balaclava-eye-window" maskUnits="userSpaceOnUse">
+          <rect width="300" height="470" fill="white" />
+          <rect x="116" y="101" width="68" height="27" rx="12" fill="black" />
+        </mask>
         <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="180%">
           <feDropShadow dx="0" dy="7" stdDeviation="7" floodColor="#475750" floodOpacity=".13" />
         </filter>
       </defs>
       <ellipse cx="151" cy="452" rx="91" ry="12" fill="#d9e2d9" />
       <g filter="url(#soft-shadow)" transform={`translate(150 0) scale(${widthScale} 1) translate(-150 0)`}>
+        <path d="M104 158c12-12 29-18 46-18s34 6 46 18l21 131H82z" fill="#f2c5a2" />
         {isWoman && <path d="M92 75c-5-29 12-55 44-57 32-2 57 16 59 49l-6 68-18-8-7-58-58 2-5 65-19-6z" fill="#49372f" />}
         <path d={isWoman ? 'M126 104h47v44c-9 12-37 12-47 0z' : 'M126 105h47v43c-9 12-37 12-47 0z'} fill="url(#skin)" />
-        <path d="M104 158c12-12 29-18 46-18s34 6 46 18l21 131H82z" fill="#f2c5a2" />
         {!isWoman && <path d="M101 90c0-33 19-53 50-53 32 0 50 21 49 55l-8 39c-7 17-22 28-42 28-21 0-35-11-43-28z" fill="url(#skin)" />}
         {isWoman && <path d="M103 89c1-32 19-51 48-51 29 0 48 20 48 52l-6 41c-7 18-21 29-42 29-21 0-35-11-42-29z" fill="url(#skin)" />}
         <path d={isWoman ? 'M102 91c-4-31 13-57 43-59 32-2 52 19 51 51-12-5-19-15-23-27-13 18-37 24-67 23z' : 'M101 93c-2-34 19-56 49-56 31 0 51 22 49 56-10-12-16-18-20-32-14 16-40 23-78 20z'} fill="#49372f" />
@@ -182,7 +200,7 @@ function Avatar({ gender, outfit, weight }) {
         </g>}
         <path d="M88 166c-12 4-20 14-24 29l-20 91c-2 10 3 17 11 18 7 1 11-4 14-12l28-78z" fill="url(#skin)" />
         <path d="M212 166c12 4 20 14 24 29l20 91c2 10-3 17-11 18-7 1-11-4-14-12l-28-78z" fill="url(#skin)" />
-        <path d="M99 276h102l-7 38-3 91h-39l-7-82-7 82h-39l-3-91z" fill="url(#skin)" />
+        <path d="M99 276h48l4 39-10 90h-39l-3-91zM153 315l4-39h44l-4 38-3 91h-39z" fill="url(#skin)" />
         {isWoman && !outfit.tee && !outfit.knit && !outfit.jacket && <g>
           <path d="M121 177l-9 23M179 177l9 23" fill="none" stroke="#b86c5d" strokeLinecap="round" strokeWidth="5" />
           <path d="M112 198c12-10 27-9 38 2 11-11 26-12 38-2l-3 24h-70z" fill="#d58a77" />
@@ -249,8 +267,7 @@ function Avatar({ gender, outfit, weight }) {
           <path d="M255 283c6-2 9 3 7 9l-4 13c-2 6-12 7-16 2l-6-11c-3-6 3-11 8-8l3 3 1-5c0-5 5-7 7-3z" />
         </g>}
         {outfit.balaclava && <g>
-          <path d="M107 91c5-22 20-34 43-34s39 12 43 34l-7 42c-6 18-19 27-36 27s-31-9-36-27z" fill={outfit.balaclava === 'fleece-balaclava' ? '#526c86' : '#7b7569'} />
-          <path d="M116 112c11-6 20-7 34-7s24 1 34 7l-4 15c-10-4-18-5-30-5s-20 1-30 5z" fill="#f2c5a2" />
+          <path d="M107 91c5-22 20-34 43-34s39 12 43 34l-7 42c-6 18-19 27-36 27s-31-9-36-27z" fill={outfit.balaclava === 'fleece-balaclava' ? '#526c86' : '#7b7569'} mask="url(#balaclava-eye-window)" />
         </g>}
       </g>
     </svg>
