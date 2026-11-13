@@ -90,9 +90,13 @@ function GarmentPicker({ type, selectedIds, onToggle }) {
   const category = clothing[type]
   const selectedItems = category.options.filter((item) => selectedIds.includes(item.id))
   const [search, setSearch] = useState('')
-  const searchResults = category.options.filter((item) => (
+  const matchingItems = category.options.filter((item) => (
     `${item.label} ${item.detail}`.toLowerCase().includes(search.trim().toLowerCase())
   ))
+  const searchResults = [
+    ...matchingItems.filter((item) => selectedIds.includes(item.id)),
+    ...matchingItems.filter((item) => !selectedIds.includes(item.id)),
+  ]
 
   return (
     <details className={`clothing-option${selectedItems.length ? ' is-selected' : ''}`}>
@@ -116,7 +120,7 @@ function GarmentPicker({ type, selectedIds, onToggle }) {
           />
         </div>
         {searchResults.length ? searchResults.map((item) => (
-          <label className="picker-item" key={item.id}>
+          <label className={`picker-item${selectedIds.includes(item.id) ? ' is-checked' : ''}`} key={item.id}>
             <input
               type="checkbox"
               checked={selectedIds.includes(item.id)}
@@ -179,11 +183,11 @@ function Avatar({ gender, outfit, weight }) {
       </defs>
       <ellipse cx="151" cy="452" rx="91" ry="12" fill="#d9e2d9" />
       <g filter="url(#soft-shadow)" transform={`translate(150 0) scale(${widthScale} 1) translate(-150 0)`}>
-        <path d="M104 158c12-12 29-18 46-18s34 6 46 18l21 131H82z" fill="#f2c5a2" />
+        <path d={isWoman ? 'M116 153h68l16 116H100z' : 'M100 153h100l-16 116h-68z'} fill="#f2c5a2" />
         {isWoman && <path d="M92 75c-5-29 12-55 44-57 32-2 57 16 59 49l-6 68-18-8-7-58-58 2-5 65-19-6z" fill="#49372f" />}
         <path d={isWoman ? 'M126 104h47v44c-9 12-37 12-47 0z' : 'M126 105h47v43c-9 12-37 12-47 0z'} fill="url(#skin)" />
-        {!isWoman && <path d="M101 90c0-33 19-53 50-53 32 0 50 21 49 55l-8 39c-7 17-22 28-42 28-21 0-35-11-43-28z" fill="url(#skin)" />}
-        {isWoman && <path d="M103 89c1-32 19-51 48-51 29 0 48 20 48 52l-6 41c-7 18-21 29-42 29-21 0-35-11-42-29z" fill="url(#skin)" />}
+        {!isWoman && <path d="M101 90c0-33 19-53 50-53 32 0 50 21 49 55l-8 39c-7 17-22 28-42 28-21 0-35-11-43-28z" fill="url(#skin)" transform="translate(150 0) scale(.94 1) translate(-150 0)" />}
+        {isWoman && <path d="M103 89c1-32 19-51 48-51 29 0 48 20 48 52l-6 41c-7 18-21 29-42 29-21 0-35-11-42-29z" fill="url(#skin)" transform="translate(150 0) scale(.94 1) translate(-150 0)" />}
         <path d={isWoman ? 'M102 91c-4-31 13-57 43-59 32-2 52 19 51 51-12-5-19-15-23-27-13 18-37 24-67 23z' : 'M101 93c-2-34 19-56 49-56 31 0 51 22 49 56-10-12-16-18-20-32-14 16-40 23-78 20z'} fill="#49372f" />
         <path d="M126 108c5-4 12-4 17 0M159 108c5-4 12-4 17 0" fill="none" stroke="#6b4738" strokeLinecap="round" strokeWidth="2.5" />
         <ellipse cx="135" cy="119" rx="2.2" ry="3" fill="#41312b" />
@@ -200,7 +204,7 @@ function Avatar({ gender, outfit, weight }) {
         </g>}
         <path d="M88 166c-12 4-20 14-24 29l-20 91c-2 10 3 17 11 18 7 1 11-4 14-12l28-78z" fill="url(#skin)" />
         <path d="M212 166c12 4 20 14 24 29l20 91c2 10-3 17-11 18-7 1-11-4-14-12l-28-78z" fill="url(#skin)" />
-        <path d="M99 276h48l4 39-10 90h-39l-3-91zM153 315l4-39h44l-4 38-3 91h-39z" fill="url(#skin)" />
+        <path d="M103 276h42l4 39-9 85h-34l-3-91zM155 315l4-39h38l-4 38-3 86h-34z" fill="url(#skin)" />
         {isWoman && !outfit.tee && !outfit.knit && !outfit.jacket && <g>
           <path d="M121 177l-9 23M179 177l9 23" fill="none" stroke="#b86c5d" strokeLinecap="round" strokeWidth="5" />
           <path d="M112 198c12-10 27-9 38 2 11-11 26-12 38-2l-3 24h-70z" fill="#d58a77" />
