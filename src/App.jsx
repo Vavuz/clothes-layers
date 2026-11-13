@@ -2,106 +2,121 @@ import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 
 const clothing = {
-  hat: {
-    label: 'Headwear',
+  head: {
+    label: 'Head & neck',
     options: [
-      { id: 'wool-beanie', label: 'Wool beanie', detail: 'Warm knit', warmth: 0.8 },
-      { id: 'cotton-cap', label: 'Cotton cap', detail: 'Light sun cover', warmth: 0.2 },
-      { id: 'bucket-hat', label: 'Cotton bucket hat', detail: 'Light shade', warmth: 0.2 },
-      { id: 'rain-hat', label: 'Waterproof rain hat', detail: 'Keeps off the rain', warmth: 0.3 },
+      { id: 'wool-beanie', slot: 'hat', label: 'Merino wool beanie', detail: 'Soft, breathable knit', warmth: 0.8 },
+      { id: 'cashmere-beanie', slot: 'hat', label: 'Cashmere beanie', detail: 'Fine, insulating knit', warmth: 1 },
+      { id: 'fleece-beanie', slot: 'hat', label: 'Fleece beanie', detail: 'Light synthetic warmth', warmth: 0.9 },
+      { id: 'cotton-cap', slot: 'hat', label: 'Cotton cap', detail: 'Light sun cover', warmth: 0.2 },
+      { id: 'linen-hat', slot: 'hat', label: 'Linen bucket hat', detail: 'Airy shade for sunny days', warmth: 0.2 },
+      { id: 'rain-hat', slot: 'hat', label: 'Nylon rain hat', detail: 'Water-resistant coverage', warmth: 0.3 },
+      { id: 'wool-scarf', slot: 'scarf', label: 'Wool scarf', detail: 'Classic warm neck layer', warmth: 1 },
+      { id: 'cashmere-scarf', slot: 'scarf', label: 'Cashmere scarf', detail: 'Soft, lightweight warmth', warmth: 0.9 },
+      { id: 'cotton-scarf', slot: 'scarf', label: 'Cotton scarf', detail: 'Light everyday coverage', warmth: 0.4 },
+      { id: 'silk-scarf', slot: 'scarf', label: 'Silk scarf', detail: 'Smooth, featherlight layer', warmth: 0.2 },
+      { id: 'merino-balaclava', slot: 'balaclava', label: 'Merino wool balaclava', detail: 'Warm face and head coverage', warmth: 1.5 },
+      { id: 'fleece-balaclava', slot: 'balaclava', label: 'Fleece balaclava', detail: 'Cozy full-face coverage', warmth: 1.6 },
     ],
   },
-  tee: {
-    label: 'T-shirt',
+  upperbody: {
+    label: 'Upper body & hands',
     options: [
-      { id: 'cotton-tee', label: 'Cotton T-shirt', detail: 'Breathable everyday layer', warmth: 1 },
-      { id: 'merino-tee', label: 'Merino wool T-shirt', detail: 'Light, naturally warm wool', warmth: 1.5 },
-      { id: 'polyester-tee', label: 'Polyester T-shirt', detail: 'Light performance fabric', warmth: 0.8 },
-      { id: 'thermal-tee', label: 'Thermal long-sleeve tee', detail: 'A warmer base layer', warmth: 1.8 },
+      { id: 'cotton-tee', slot: 'tee', label: 'Cotton T-shirt', detail: 'Breathable everyday layer', warmth: 1 },
+      { id: 'linen-shirt', slot: 'tee', label: 'Linen shirt', detail: 'Cool, airy natural fiber', warmth: 0.8 },
+      { id: 'silk-blouse', slot: 'tee', label: 'Silk blouse', detail: 'Light, smooth base layer', warmth: 0.9 },
+      { id: 'merino-tee', slot: 'tee', label: 'Merino wool T-shirt', detail: 'Light, naturally warm wool', warmth: 1.5 },
+      { id: 'thermal-tee', slot: 'tee', label: 'Polyester thermal top', detail: 'Warm, quick-drying base layer', warmth: 1.8 },
+      { id: 'cotton-sweatshirt', slot: 'knit', label: 'Cotton sweatshirt', detail: 'Soft, midweight layer', warmth: 2 },
+      { id: 'wool-jumper', slot: 'knit', label: 'Wool jumper', detail: 'Warm natural insulation', warmth: 2.8 },
+      { id: 'cashmere-jumper', slot: 'knit', label: 'Cashmere jumper', detail: 'Lightweight, luxurious warmth', warmth: 2.6 },
+      { id: 'poly-fleece', slot: 'knit', label: 'Polyester fleece', detail: 'Light synthetic warmth', warmth: 2.4 },
+      { id: 'chunky-knit', slot: 'knit', label: 'Chunky alpaca knit', detail: 'A very warm natural layer', warmth: 3.3 },
+      { id: 'denim-jacket', slot: 'jacket', label: 'Denim jacket', detail: 'Light everyday outer layer', warmth: 1.6 },
+      { id: 'windbreaker', slot: 'jacket', label: 'Nylon windbreaker', detail: 'Light wind protection', warmth: 1.4 },
+      { id: 'wool-coat', slot: 'jacket', label: 'Wool coat', detail: 'Warm structured layer', warmth: 2.8 },
+      { id: 'puffer-jacket', slot: 'jacket', label: 'Down puffer jacket', detail: 'High-warmth insulated layer', warmth: 3.5 },
+      { id: 'cotton-gloves', slot: 'gloves', label: 'Cotton gloves', detail: 'Light everyday hand cover', warmth: 0.4 },
+      { id: 'wool-gloves', slot: 'gloves', label: 'Merino wool gloves', detail: 'Soft natural hand warmth', warmth: 0.8 },
+      { id: 'fleece-gloves', slot: 'gloves', label: 'Fleece gloves', detail: 'Cozy synthetic insulation', warmth: 1 },
+      { id: 'leather-gloves', slot: 'gloves', label: 'Leather gloves', detail: 'Wind-resistant outer layer', warmth: 0.7 },
+      { id: 'neoprene-gloves', slot: 'gloves', label: 'Neoprene gloves', detail: 'Water-resistant coverage', warmth: 1.2 },
     ],
   },
-  knit: {
-    label: 'Jumper',
+  lowerbody: {
+    label: 'Lower body',
     options: [
-      { id: 'cotton-sweatshirt', label: 'Cotton sweatshirt', detail: 'Soft, midweight layer', warmth: 2 },
-      { id: 'wool-jumper', label: 'Wool jumper', detail: 'Warm natural insulation', warmth: 2.8 },
-      { id: 'poly-fleece', label: 'Polyester fleece', detail: 'Light synthetic warmth', warmth: 2.4 },
-      { id: 'chunky-knit', label: 'Chunky wool knit', detail: 'A very warm knit layer', warmth: 3.3 },
+      { id: 'cotton-trousers', slot: 'trousers', label: 'Cotton trousers', detail: 'Light everyday coverage', warmth: 1.4 },
+      { id: 'linen-trousers', slot: 'trousers', label: 'Linen trousers', detail: 'Cool, breathable weave', warmth: 1 },
+      { id: 'denim-jeans', slot: 'trousers', label: 'Denim jeans', detail: 'Midweight cotton denim', warmth: 1.8 },
+      { id: 'wool-trousers', slot: 'trousers', label: 'Wool trousers', detail: 'Warm natural-fiber layer', warmth: 2.2 },
+      { id: 'shorts', slot: 'trousers', label: 'Cotton shorts', detail: 'Cool, lightweight coverage', warmth: 0.2 },
+      { id: 'leggings', slot: 'trousers', label: 'Polyester leggings', detail: 'Light stretch layer', warmth: 1.1 },
+      { id: 'bamboo-leggings', slot: 'trousers', label: 'Bamboo leggings', detail: 'Soft, breathable stretch', warmth: 1.2 },
+      { id: 'thermal-leggings', slot: 'trousers', label: 'Fleece-lined leggings', detail: 'Extra warmth underneath', warmth: 2 },
+      { id: 'corduroy-trousers', slot: 'trousers', label: 'Corduroy trousers', detail: 'Textured cotton warmth', warmth: 1.9 },
     ],
   },
-  jacket: {
-    label: 'Jacket',
+  feet: {
+    label: 'Feet',
     options: [
-      { id: 'denim-jacket', label: 'Denim jacket', detail: 'Light everyday outer layer', warmth: 1.6 },
-      { id: 'windbreaker', label: 'Polyester windbreaker', detail: 'Light wind protection', warmth: 1.4 },
-      { id: 'wool-coat', label: 'Wool coat', detail: 'Warm structured layer', warmth: 2.8 },
-      { id: 'puffer-jacket', label: 'Insulated puffer jacket', detail: 'High warmth outer layer', warmth: 3.5 },
-    ],
-  },
-  trousers: {
-    label: 'Bottoms',
-    options: [
-      { id: 'cotton-trousers', label: 'Cotton trousers', detail: 'Light everyday coverage', warmth: 1.4 },
-      { id: 'denim-jeans', label: 'Denim jeans', detail: 'Midweight cotton denim', warmth: 1.8 },
-      { id: 'shorts', label: 'Shorts', detail: 'Cool, lightweight coverage', warmth: 0.2 },
-      { id: 'leggings', label: 'Polyester leggings', detail: 'Light stretch layer', warmth: 1.1 },
-      { id: 'thermal-leggings', label: 'Thermal leggings', detail: 'Extra warmth underneath', warmth: 2 },
-    ],
-  },
-  socks: {
-    label: 'Socks',
-    options: [
-      { id: 'cotton-socks', label: 'Cotton socks', detail: 'Light everyday pair', warmth: 0.6 },
-      { id: 'bamboo-socks', label: 'Bamboo socks', detail: 'Light, breathable pair', warmth: 0.5 },
-      { id: 'wool-socks', label: 'Merino wool socks', detail: 'Warm natural fiber', warmth: 1 },
-      { id: 'thermal-socks', label: 'Thermal socks', detail: 'Extra-cozy cold-weather pair', warmth: 1.5 },
-    ],
-  },
-  shoes: {
-    label: 'Footwear',
-    options: [
-      { id: 'sneakers', label: 'Sneakers', detail: 'Everyday closed shoes', warmth: 0.5 },
-      { id: 'flip-flops', label: 'Flip-flops', detail: 'Open, minimal footwear', warmth: 0.1 },
-      { id: 'sandals', label: 'Sandals', detail: 'Open summer footwear', warmth: 0.1 },
-      { id: 'rain-boots', label: 'Rain boots', detail: 'Waterproof coverage', warmth: 1 },
-      { id: 'heavy-boots', label: 'Heavy boots', detail: 'Sturdy, warm footwear', warmth: 1.8 },
-      { id: 'shearling-boots', label: 'Shearling-lined boots', detail: 'Very warm lined boots', warmth: 2.2 },
+      { id: 'cotton-socks', slot: 'socks', label: 'Cotton socks', detail: 'Light everyday pair', warmth: 0.6 },
+      { id: 'bamboo-socks', slot: 'socks', label: 'Bamboo socks', detail: 'Light, breathable pair', warmth: 0.5 },
+      { id: 'silk-socks', slot: 'socks', label: 'Silk socks', detail: 'Fine, lightweight layer', warmth: 0.4 },
+      { id: 'wool-socks', slot: 'socks', label: 'Merino wool socks', detail: 'Warm natural fiber', warmth: 1 },
+      { id: 'cashmere-socks', slot: 'socks', label: 'Cashmere socks', detail: 'Soft, insulating comfort', warmth: 1.2 },
+      { id: 'thermal-socks', slot: 'socks', label: 'Thermal fleece socks', detail: 'Extra-cozy cold-weather pair', warmth: 1.5 },
+      { id: 'sneakers', slot: 'shoes', label: 'Canvas sneakers', detail: 'Everyday lightweight shoes', warmth: 0.5 },
+      { id: 'leather-shoes', slot: 'shoes', label: 'Leather shoes', detail: 'Classic closed footwear', warmth: 0.7 },
+      { id: 'flip-flops', slot: 'shoes', label: 'Flip-flops', detail: 'Open, minimal footwear', warmth: 0.1 },
+      { id: 'sandals', slot: 'shoes', label: 'Leather sandals', detail: 'Open summer footwear', warmth: 0.1 },
+      { id: 'rain-boots', slot: 'shoes', label: 'Rubber rain boots', detail: 'Waterproof coverage', warmth: 1 },
+      { id: 'heavy-boots', slot: 'shoes', label: 'Leather boots', detail: 'Sturdy, warm footwear', warmth: 1.8 },
+      { id: 'shearling-boots', slot: 'shoes', label: 'Shearling-lined boots', detail: 'Very warm lined boots', warmth: 2.2 },
     ],
   },
 }
 
-const defaultOutfit = {
-  hat: '',
-  tee: 'cotton-tee',
-  knit: '',
-  jacket: '',
-  trousers: 'cotton-trousers',
-  socks: '',
-  shoes: 'sneakers',
+function makeDefaultOutfit() {
+  return {
+    head: ['wool-beanie'],
+    upperbody: ['cotton-tee'],
+    lowerbody: ['cotton-trousers'],
+    feet: ['sneakers'],
+  }
 }
 
-function GarmentPicker({ type, selectedId, onSelect }) {
+function GarmentPicker({ type, selectedIds, onToggle }) {
   const category = clothing[type]
-  const selectedItem = category.options.find((item) => item.id === selectedId)
+  const selectedItems = category.options.filter((item) => selectedIds.includes(item.id))
 
   return (
-    <div className={`clothing-option${selectedItem ? ' is-selected' : ''}`}>
-      <span className={`item-mark mark-${type}`} aria-hidden="true">
-        {type === 'hat' ? '⌒' : type === 'tee' ? 'T' : type === 'knit' ? '≋' : type === 'jacket' ? '⌁' : type === 'trousers' ? 'Ⅱ' : type === 'socks' ? '◡' : '↗'}
-      </span>
-      <span className="option-copy">
-        <span className="option-name">{category.label}</span>
-        <span className="option-detail">{selectedItem?.detail ?? 'Choose a style and fabric'}</span>
-        <select
-          aria-label={`Choose ${category.label}`}
-          value={selectedId}
-          onChange={(event) => onSelect(type, event.target.value)}
-        >
-          <option value="">None</option>
-          {category.options.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
-        </select>
-      </span>
-    </div>
+    <details className={`clothing-option${selectedItems.length ? ' is-selected' : ''}`}>
+      <summary aria-label={`${category.label}, ${selectedItems.length} selected`}>
+        <span className="item-mark" aria-hidden="true">{type === 'head' ? '⌒' : type === 'upperbody' ? '↟' : type === 'lowerbody' ? 'Ⅱ' : '◡'}</span>
+        <span className="option-copy">
+          <span className="option-name">{category.label}</span>
+          <span className="option-detail">{selectedItems.length ? `${selectedItems.length} selected · ${selectedItems.map((item) => item.label).join(', ')}` : 'Choose any items to wear'}</span>
+        </span>
+        <span className="picker-chevron" aria-hidden="true">⌄</span>
+      </summary>
+      <div className="picker-list">
+        {category.options.map((item) => (
+          <label className="picker-item" key={item.id}>
+            <input
+              type="checkbox"
+              checked={selectedIds.includes(item.id)}
+              onChange={() => onToggle(type, item.id)}
+            />
+            <span className="picker-item-copy">
+              <span className="picker-item-name">{item.label}</span>
+              <span className="picker-item-detail">{item.detail}</span>
+            </span>
+            <span className="warmth-rating" aria-label={`${item.warmth} warmth`}>+{item.warmth.toFixed(1)}</span>
+          </label>
+        ))}
+      </div>
+    </details>
   )
 }
 
@@ -110,12 +125,12 @@ function Avatar({ gender, outfit, weight }) {
   const widthScale = weight <= 75
     ? 0.8 + ((weight - 45) / 30) * 0.2
     : 1 + ((weight - 75) / 65) * 0.35
-  const teeFill = outfit.tee === 'merino-tee' ? 'url(#knit)' : outfit.tee === 'polyester-tee' ? '#557f99' : outfit.tee === 'thermal-tee' ? '#6e6c83' : 'url(#tee)'
-  const knitFill = outfit.knit === 'cotton-sweatshirt' ? '#7d9284' : outfit.knit === 'poly-fleece' ? '#596f9b' : outfit.knit === 'chunky-knit' ? '#96724d' : 'url(#knit)'
+  const teeFill = outfit.tee === 'merino-tee' ? 'url(#knit)' : outfit.tee === 'thermal-tee' ? '#6e6c83' : outfit.tee === 'linen-shirt' ? '#9a876b' : outfit.tee === 'silk-blouse' ? '#987d95' : 'url(#tee)'
+  const knitFill = outfit.knit === 'cotton-sweatshirt' ? '#7d9284' : outfit.knit === 'poly-fleece' ? '#596f9b' : outfit.knit === 'chunky-knit' ? '#96724d' : outfit.knit === 'cashmere-jumper' ? '#936f72' : 'url(#knit)'
   const jacketFill = outfit.jacket === 'denim-jacket' ? '#4f6e8d' : outfit.jacket === 'windbreaker' ? '#51908b' : outfit.jacket === 'wool-coat' ? '#8c6854' : outfit.jacket === 'puffer-jacket' ? '#a98746' : 'url(#jacket)'
-  const trousersFill = outfit.trousers === 'leggings' ? '#6a6579' : outfit.trousers === 'thermal-leggings' ? '#4e5263' : outfit.trousers === 'denim-jeans' ? '#405d72' : 'url(#pants)'
-  const socksFill = outfit.socks === 'thermal-socks' ? '#d9d4c2' : outfit.socks === 'wool-socks' ? '#e5ddd0' : outfit.socks === 'bamboo-socks' ? '#e7eee1' : '#f1eee1'
-  const bootFill = outfit.shoes === 'rain-boots' ? '#b78d49' : outfit.shoes === 'heavy-boots' ? '#5c4b3b' : '#bd8b6a'
+  const trousersFill = outfit.trousers === 'leggings' || outfit.trousers === 'bamboo-leggings' ? '#6a6579' : outfit.trousers === 'thermal-leggings' ? '#4e5263' : outfit.trousers === 'denim-jeans' ? '#405d72' : outfit.trousers === 'wool-trousers' ? '#786656' : outfit.trousers === 'linen-trousers' ? '#92866d' : outfit.trousers === 'corduroy-trousers' ? '#805c48' : 'url(#pants)'
+  const socksFill = outfit.socks === 'thermal-socks' ? '#d9d4c2' : outfit.socks === 'wool-socks' || outfit.socks === 'cashmere-socks' ? '#e5ddd0' : outfit.socks === 'bamboo-socks' ? '#e7eee1' : outfit.socks === 'silk-socks' ? '#e8dce4' : '#f1eee1'
+  const bootFill = outfit.shoes === 'rain-boots' ? '#b78d49' : outfit.shoes === 'heavy-boots' ? '#5c4b3b' : outfit.shoes === 'shearling-boots' ? '#8b6852' : '#bd8b6a'
 
   return (
     <svg className="avatar-art" viewBox="0 0 300 470" role="img" aria-label={`${gender} avatar at ${weight} kilograms wearing the selected outfit`}>
@@ -158,16 +173,12 @@ function Avatar({ gender, outfit, weight }) {
         <path d="M143 137c5 4 11 4 16 0" fill="none" stroke="#a95e53" strokeLinecap="round" strokeWidth="2.5" />
         <circle cx="119" cy="131" r="7" fill="#e99f85" opacity=".38" />
         <circle cx="183" cy="131" r="7" fill="#e99f85" opacity=".38" />
-        {outfit.hat === 'wool-beanie' && <g>
-          <path d="M105 87c1-28 18-44 45-44s44 16 45 44z" fill="#d8775b" />
-          <path d="M103 82h94v16h-94z" rx="8" fill="#bd5c47" />
-          <circle cx="150" cy="41" r="6" fill="#e9a47e" />
-        </g>}
-        {(outfit.hat === 'cotton-cap' || outfit.hat === 'bucket-hat' || outfit.hat === 'rain-hat') && <g>
-          <path d="M105 88c2-28 18-43 45-43s43 15 45 43z" fill={outfit.hat === 'rain-hat' ? '#708d83' : '#d8775b'} />
-          {outfit.hat === 'cotton-cap' && <path d="M105 84c-16 0-26 5-31 13 14 5 27 4 38-1z" fill="#bd5c47" />}
-          {outfit.hat === 'bucket-hat' && <path d="M99 81h102l9 13c-36 11-84 11-120 0z" fill="#bd5c47" />}
-          {outfit.hat === 'rain-hat' && <path d="M88 83h124l9 8c-42 12-100 12-142 0z" fill="#5f786f" />}
+        {outfit.hat && <g>
+          <path d="M105 87c1-28 18-44 45-44s44 16 45 44z" fill={outfit.hat === 'rain-hat' ? '#708d83' : outfit.hat === 'cashmere-beanie' ? '#8c6b7b' : outfit.hat === 'fleece-beanie' ? '#647d9a' : outfit.hat === 'linen-hat' ? '#b29a6c' : '#d8775b'} />
+          {outfit.hat === 'wool-beanie' || outfit.hat === 'cashmere-beanie' || outfit.hat === 'fleece-beanie'
+            ? <path d="M103 82h94v16h-94z" rx="8" fill="#bd5c47" />
+            : <path d="M92 83h116l8 10c-39 11-91 11-132 0z" fill={outfit.hat === 'rain-hat' ? '#5f786f' : '#bd5c47'} />}
+          {outfit.hat === 'wool-beanie' && <circle cx="150" cy="41" r="6" fill="#e9a47e" />}
         </g>}
         <path d="M88 166c-12 4-20 14-24 29l-20 91c-2 10 3 17 11 18 7 1 11-4 14-12l28-78z" fill="url(#skin)" />
         <path d="M212 166c12 4 20 14 24 29l20 91c2 10-3 17-11 18-7 1-11-4-14-12l-28-78z" fill="url(#skin)" />
@@ -196,10 +207,10 @@ function Avatar({ gender, outfit, weight }) {
         </g>}
         <path d="M105 401h32v12c0 6 8 9 16 15l3 3c3 4 1 8-5 8H96c-6 0-9-5-6-10z" fill="url(#skin)" />
         <path d="M163 401h32v12c0 6 9 9 17 15l4 3c3 4 1 8-5 8h-53c-6 0-9-5-6-10z" fill="url(#skin)" />
-        {outfit.shoes === 'sneakers' && <g>
+        {(outfit.shoes === 'sneakers' || outfit.shoes === 'leather-shoes') && <g>
           <path d="M104 401h34v12c0 6 8 9 16 15l3 3c3 4 1 8-5 8H96c-6 0-9-5-6-10z" fill="#f5f0e5" />
           <path d="M162 401h34v12c0 6 9 9 17 15l4 3c3 4 1 8-5 8h-53c-6 0-9-5-6-10z" fill="#f5f0e5" />
-          <path d="M96 436h61M163 436h60M112 418l10 7M171 418l10 7" fill="none" stroke="#d4cfc2" strokeLinecap="round" strokeWidth="2" />
+          <path d="M96 436h61M163 436h60M112 418l10 7M171 418l10 7" fill="none" stroke={outfit.shoes === 'leather-shoes' ? '#8d6448' : '#d4cfc2'} strokeLinecap="round" strokeWidth="2" />
         </g>}
         {(outfit.shoes === 'flip-flops' || outfit.shoes === 'sandals') && <g fill="none" strokeLinecap="round" strokeLinejoin="round">
           <path d="M96 438h61M163 438h60" stroke="#9e7957" strokeWidth="4" />
@@ -229,6 +240,18 @@ function Avatar({ gender, outfit, weight }) {
           <path d="M150 173v107M121 190l15 12M179 190l-15 12" fill="none" stroke="#a9762d" strokeWidth="2" />
         </g>}
         {outfit.jacket && outfit.tee && <path d="M85 162l-29 46 28 17 14-22M215 162l29 46-28 17-14-22" fill={jacketFill} />}
+        {outfit.scarf && <g>
+          <path d="M126 143c8 7 39 7 48 0l6 19c-13 12-47 12-60 0z" fill={outfit.scarf === 'cashmere-scarf' ? '#96748d' : outfit.scarf === 'cotton-scarf' ? '#6c8c7c' : outfit.scarf === 'silk-scarf' ? '#b98b78' : '#bd765e'} />
+          <path d="M165 157l14 3-2 36-14-2z" fill={outfit.scarf === 'cashmere-scarf' ? '#96748d' : outfit.scarf === 'cotton-scarf' ? '#6c8c7c' : outfit.scarf === 'silk-scarf' ? '#b98b78' : '#bd765e'} />
+        </g>}
+        {outfit.gloves && <g fill={outfit.gloves === 'leather-gloves' ? '#7b5745' : outfit.gloves === 'neoprene-gloves' ? '#4b6578' : '#687f70'}>
+          <path d="M45 283c-6-2-9 3-7 9l4 13c2 6 12 7 16 2l6-11c3-6-3-11-8-8l-3 3-1-5c0-5-5-7-7-3z" />
+          <path d="M255 283c6-2 9 3 7 9l-4 13c-2 6-12 7-16 2l-6-11c-3-6 3-11 8-8l3 3 1-5c0-5 5-7 7-3z" />
+        </g>}
+        {outfit.balaclava && <g>
+          <path d="M107 91c5-22 20-34 43-34s39 12 43 34l-7 42c-6 18-19 27-36 27s-31-9-36-27z" fill={outfit.balaclava === 'fleece-balaclava' ? '#526c86' : '#7b7569'} />
+          <path d="M116 112c11-6 20-7 34-7s24 1 34 7l-4 15c-10-4-18-5-30-5s-20 1-30 5z" fill="#f2c5a2" />
+        </g>}
       </g>
     </svg>
   )
@@ -240,7 +263,7 @@ function App() {
   const [theme, setTheme] = useState(() => (
     window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   ))
-  const [outfit, setOutfit] = useState(defaultOutfit)
+  const [outfit, setOutfit] = useState(makeDefaultOutfit)
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -248,8 +271,10 @@ function App() {
 
   const temperature = useMemo(() => {
     const warmth = Object.entries(outfit).reduce((total, [type, selectedId]) => {
-      const selectedItem = clothing[type].options.find((item) => item.id === selectedId)
-      return total + (selectedItem?.warmth ?? 0)
+      return total + selectedId.reduce((regionWarmth, id) => {
+        const selectedItem = clothing[type].options.find((item) => item.id === id)
+        return regionWarmth + (selectedItem?.warmth ?? 0)
+      }, 0)
     }, 0)
     const bodyAdjustment = (75 - weight) * 0.04 + (gender === 'woman' ? 1 : -1)
     const low = Math.round(26 - warmth * 2.2 + bodyAdjustment)
@@ -258,13 +283,25 @@ function App() {
     return { low, high, min: low - 10, max: high + 8, feels: Math.round((low + high) / 2), position }
   }, [gender, outfit, weight])
 
-  const selectedItems = Object.entries(outfit).flatMap(([type, selectedId]) => {
-    const selectedItem = clothing[type].options.find((item) => item.id === selectedId)
-    return selectedItem ? [selectedItem] : []
+  const selectedItems = Object.entries(outfit).flatMap(([type, selectedIds]) => {
+    return selectedIds.flatMap((id) => {
+      const selectedItem = clothing[type].options.find((item) => item.id === id)
+      return selectedItem ? [selectedItem] : []
+    })
   })
 
-  function chooseClothing(type, selectedId) {
-    setOutfit((current) => ({ ...current, [type]: selectedId }))
+  const avatarOutfit = selectedItems.reduce((itemsBySlot, item) => ({
+    ...itemsBySlot,
+    [item.slot]: item.id,
+  }), {})
+
+  function toggleClothing(type, selectedId) {
+    setOutfit((current) => ({
+      ...current,
+      [type]: current[type].includes(selectedId)
+        ? current[type].filter((id) => id !== selectedId)
+        : [...current[type], selectedId],
+    }))
   }
 
   return (
@@ -286,7 +323,7 @@ function App() {
             <span className="theme-toggle-icon" aria-hidden="true">{theme === 'dark' ? '☼' : '☾'}</span>
             <span>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
           </button>
-          <button className="reset-button" type="button" onClick={() => setOutfit({ ...defaultOutfit })}>
+          <button className="reset-button" type="button" onClick={() => setOutfit(makeDefaultOutfit())}>
             <span aria-hidden="true">↺</span> Reset outfit
           </button>
         </div>
@@ -345,21 +382,17 @@ function App() {
           </div>
 
           <div className="section-rule" />
-          <div className="category-heading"><span className="category-icon hat-icon" aria-hidden="true">⌒</span><div><h3>On your head</h3><span>One easy extra</span></div></div>
-          <GarmentPicker type="hat" selectedId={outfit.hat} onSelect={chooseClothing} />
-
-          <div className="section-rule" />
-          <div className="category-heading"><span className="category-icon top-icon" aria-hidden="true">↟</span><div><h3>Top layers</h3><span>Mix and match</span></div></div>
           <div className="option-stack">
-            {['tee', 'knit', 'jacket'].map((type) => <GarmentPicker key={type} type={type} selectedId={outfit[type]} onSelect={chooseClothing} />)}
+            <GarmentPicker type="head" selectedIds={outfit.head} onToggle={toggleClothing} />
+            <GarmentPicker type="upperbody" selectedIds={outfit.upperbody} onToggle={toggleClothing} />
           </div>
-          <p className="layer-tip"><span aria-hidden="true">✳</span> Layers trap warmth. Add one at a time.</p>
+          <p className="layer-tip"><span aria-hidden="true">✳</span> Choose every layer you want; each item adds to your warmth estimate.</p>
         </aside>
 
         <div className="avatar-stage">
           <div className="stage-note"><span className="live-dot" /> LIVE PREVIEW</div>
           <div className="avatar-halo" />
-          <Avatar gender={gender} outfit={outfit} weight={weight} />
+          <Avatar gender={gender} outfit={avatarOutfit} weight={weight} />
           <div className="avatar-caption"><span>{gender === 'woman' ? 'Maya' : 'Alex'}</span><small>ready for the day</small></div>
           <div className="outfit-chips" aria-label="Selected clothing">
             {selectedItems.map((item) => (
@@ -373,9 +406,9 @@ function App() {
             <span className="eyebrow">02 — THE FINISHING TOUCHES</span>
             <h2>From the ground up</h2>
           </div>
-          <div className="category-heading"><span className="category-icon trouser-icon" aria-hidden="true">Ⅱ</span><div><h3>Bottom layers</h3><span>Stay cozy down there</span></div></div>
           <div className="option-stack">
-            {['trousers', 'socks', 'shoes'].map((type) => <GarmentPicker key={type} type={type} selectedId={outfit[type]} onSelect={chooseClothing} />)}
+            <GarmentPicker type="lowerbody" selectedIds={outfit.lowerbody} onToggle={toggleClothing} />
+            <GarmentPicker type="feet" selectedIds={outfit.feet} onToggle={toggleClothing} />
           </div>
 
           <div className="weather-note">
@@ -384,7 +417,7 @@ function App() {
           </div>
 
           <div className="quick-stats">
-            <div><span className="stat-icon">♧</span><span>Layers on</span><strong>{Object.values(outfit).filter(Boolean).length}</strong></div>
+            <div><span className="stat-icon">♧</span><span>Items on</span><strong>{selectedItems.length}</strong></div>
             <div><span className="stat-icon warm-stat">⌁</span><span>Warmth level</span><strong>{temperature.feels > 25 ? 'Toasty' : temperature.feels < 16 ? 'Light' : 'Just right'}</strong></div>
           </div>
         </aside>

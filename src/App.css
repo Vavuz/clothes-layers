@@ -479,20 +479,37 @@ p {
 }
 
 .clothing-option {
-  display: flex;
+  position: relative;
+  display: block;
   width: 100%;
-  min-height: 92px;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 8px;
   border: 1px solid transparent;
   border-radius: 10px;
   background: transparent;
-  text-align: left;
   transition: background .18s, border-color .18s;
 }
 
-.clothing-option:hover {
+.clothing-option[open] {
+  z-index: 3;
+}
+
+.clothing-option > summary {
+  display: flex;
+  min-height: 76px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  list-style: none;
+  text-align: left;
+}
+
+.clothing-option > summary::-webkit-details-marker {
+  display: none;
+}
+
+.clothing-option:hover,
+.clothing-option[open] {
   border-color: #e7ebe4;
   background: #fafbf7;
 }
@@ -512,6 +529,100 @@ p {
   background: #f1eee6;
   color: #b38360;
   font: 600 15px/1 'Manrope', sans-serif;
+}
+
+.picker-chevron {
+  flex: 0 0 auto;
+  color: #79917f;
+  font-size: 19px;
+  transition: transform .18s;
+}
+
+.clothing-option[open] .picker-chevron {
+  transform: rotate(180deg);
+}
+
+.option-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.option-name {
+  color: #4a5a50;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.option-detail {
+  overflow: hidden;
+  color: #9aa39b;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picker-list {
+  position: absolute;
+  top: calc(100% - 3px);
+  right: 0;
+  left: 0;
+  z-index: 5;
+  max-height: 330px;
+  overflow-y: auto;
+  padding: 5px;
+  border: 1px solid #e1e7df;
+  border-radius: 9px;
+  background: #fffefa;
+  box-shadow: 0 10px 24px rgba(39, 56, 50, .14);
+}
+
+.picker-item {
+  display: flex;
+  min-height: 50px;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 7px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.picker-item:hover {
+  background: #f3f6ef;
+}
+
+.picker-item input {
+  flex: 0 0 auto;
+  accent-color: #688372;
+}
+
+.picker-item-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.picker-item-name {
+  color: #4a5a50;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.picker-item-detail {
+  color: #9aa39b;
+  font-size: 9px;
+}
+
+.warmth-rating {
+  flex: 0 0 auto;
+  color: #708573;
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
 }
 
 .mark-tee,
@@ -536,44 +647,7 @@ p {
   color: #66836f;
 }
 
-.option-copy {
-  display: flex;
-  min-width: 0;
-  flex: 1;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.option-name {
-  color: #4a5a50;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.option-detail {
-  overflow: hidden;
-  color: #9aa39b;
-  font-size: 10px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.clothing-option select {
-  width: 100%;
-  min-width: 0;
-  height: 34px;
-  margin-top: 5px;
-  padding: 0 9px;
-  border: 1px solid #e1e7df;
-  border-radius: 7px;
-  background: #fffefa;
-  color: #4a5a50;
-  cursor: pointer;
-  font: inherit;
-  font-size: 10px;
-}
-
-.clothing-option select:focus-visible {
+.clothing-option > summary:focus-visible {
   outline: 2px solid #7e9c85;
   outline-offset: 2px;
 }
@@ -888,10 +962,27 @@ p {
   background: #2a352d;
 }
 
-:root[data-theme='dark'] .clothing-option select {
+:root[data-theme='dark'] .clothing-option[open] {
+  background: #202923;
+}
+
+:root[data-theme='dark'] .picker-list {
   border-color: #465349;
   background: #1b241e;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+}
+
+:root[data-theme='dark'] .picker-item:hover {
+  background: #2a352d;
+}
+
+:root[data-theme='dark'] .option-name,
+:root[data-theme='dark'] .picker-item-name {
   color: #dce8df;
+}
+
+:root[data-theme='dark'] .picker-item-detail {
+  color: #a4b0a7;
 }
 
 :root[data-theme='dark'] .avatar-stage {
@@ -1098,8 +1189,8 @@ p {
     font-size: 12px;
   }
 
-  .clothing-option {
-    min-height: 106px;
+  .clothing-option > summary {
+    min-height: 82px;
     gap: 13px;
     padding: 10px 12px;
     border-radius: 12px;
@@ -1119,9 +1210,17 @@ p {
     font-size: 12px;
   }
 
-  .clothing-option select {
-    height: 39px;
+  .picker-item {
+    min-height: 58px;
+  }
+
+  .picker-item-name {
     font-size: 12px;
+  }
+
+  .picker-item-detail,
+  .warmth-rating {
+    font-size: 10px;
   }
 
   .layer-tip {
