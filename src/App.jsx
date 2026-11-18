@@ -566,7 +566,11 @@ function App() {
         </aside>
       </section>
 
-      <footer className="page-footer"><span>Made for everyday comfort</span><span>Just a guide — dress how you feel.</span></footer>
+      <footer className="page-footer">
+        <span>Made for everyday comfort</span>
+        <span>Just a guide — dress how you feel.</span>
+        <span>© {new Date().getFullYear()} layer. · Developed by <a href="https://cricketdev.github.io/cricket-dev-website/" target="_blank" rel="noreferrer">CricketDev</a></span>
+      </footer>
     </main>
   )
 }

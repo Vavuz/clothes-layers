@@ -982,10 +982,22 @@ p {
 
 .page-footer {
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
   justify-content: space-between;
   padding: 2px 3px 0;
   color: #a1a99f;
   font-size: 9px;
+}
+
+.page-footer a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.page-footer a:hover {
+  color: #64856a;
 }
 
 :root[data-theme='dark'] .topbar-note,
