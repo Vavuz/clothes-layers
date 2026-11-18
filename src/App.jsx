@@ -117,6 +117,13 @@ const hairstyles = [
   { id: 'long', label: 'Long', warmth: 0.3 },
 ]
 
+const clothingSelectionLimits = {
+  head: 5,
+  upperbody: 8,
+  lowerbody: 6,
+  feet: 5,
+}
+
 function makeDefaultOutfit() {
   return {
     head: ['wool-beanie'],
@@ -126,9 +133,10 @@ function makeDefaultOutfit() {
   }
 }
 
-function GarmentPicker({ type, selectedIds, onToggle }) {
+function GarmentPicker({ type, selectedIds, onToggle, maxItems }) {
   const category = clothing[type]
   const selectedItems = category.options.filter((item) => selectedIds.includes(item.id))
+  const isAtLimit = selectedIds.length >= maxItems
   const [search, setSearch] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const pickerRef = useRef(null)
@@ -158,14 +166,14 @@ function GarmentPicker({ type, selectedIds, onToggle }) {
       open={isOpen}
       onToggle={(event) => setIsOpen(event.currentTarget.open)}
     >
-      <summary aria-label={`${category.label}, ${category.options.length} available items, ${selectedItems.length} selected`}>
+      <summary aria-label={`${category.label}, ${category.options.length} available items, ${selectedItems.length} of ${maxItems} allowed selected`}>
         <span className="item-mark" aria-hidden="true">{type === 'head' ? '⌒' : type === 'upperbody' ? '↟' : type === 'lowerbody' ? 'Ⅱ' : '◡'}</span>
         <span className="option-copy">
           <span className="option-name-row">
             <span className="option-name">{category.label}</span>
             <span className="item-count" aria-hidden="true">{category.options.length}</span>
           </span>
-          <span className="option-detail">{selectedItems.length ? `${selectedItems.length} selected · ${selectedItems.map((item) => item.label).join(', ')}` : 'Choose any items to wear'}</span>
+          <span className="option-detail">{selectedItems.length ? `${selectedItems.length}/${maxItems} selected · ${selectedItems.map((item) => item.label).join(', ')}` : `Choose up to ${maxItems} items`}</span>
         </span>
         <span className="picker-chevron" aria-hidden="true">⌄</span>
       </summary>
@@ -180,20 +188,25 @@ function GarmentPicker({ type, selectedIds, onToggle }) {
             aria-label={`Search ${category.label}`}
           />
         </div>
-        {searchResults.length ? searchResults.map((item) => (
-          <label className={`picker-item${selectedIds.includes(item.id) ? ' is-checked' : ''}`} key={item.id}>
-            <input
-              type="checkbox"
-              checked={selectedIds.includes(item.id)}
-              onChange={() => onToggle(type, item.id)}
-            />
-            <span className="picker-item-copy">
-              <span className="picker-item-name">{item.label}</span>
-              <span className="picker-item-detail">{item.detail}</span>
-            </span>
-            <span className="warmth-rating" aria-label={`${item.warmth} warmth`}>+{item.warmth.toFixed(1)}</span>
-          </label>
-        )) : <p className="picker-empty">No items match “{search}”.</p>}
+        {isAtLimit && <p className="picker-limit-note" role="status">Limit reached ({maxItems} items). Remove one to choose another.</p>}
+        {searchResults.length ? searchResults.map((item) => {
+          const isSelected = selectedIds.includes(item.id)
+          return (
+            <label className={`picker-item${isSelected ? ' is-checked' : ''}${isAtLimit && !isSelected ? ' is-disabled' : ''}`} key={item.id}>
+              <input
+                type="checkbox"
+                checked={isSelected}
+                disabled={isAtLimit && !isSelected}
+                onChange={() => onToggle(type, item.id)}
+              />
+              <span className="picker-item-copy">
+                <span className="picker-item-name">{item.label}</span>
+                <span className="picker-item-detail">{item.detail}</span>
+              </span>
+              <span className="warmth-rating" aria-label={`${item.warmth} warmth`}>+{item.warmth.toFixed(1)}</span>
+            </label>
+          )
+        }) : <p className="picker-empty">No items match “{search}”.</p>}
       </div>
     </details>
   )
@@ -358,6 +371,7 @@ function App() {
   const [weight, setWeight] = useState(75)
   const [age, setAge] = useState(35)
   const [height, setHeight] = useState(170)
+  const [temperatureUnit, setTemperatureUnit] = useState('C')
   const [theme, setTheme] = useState(() => (
     window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   ))
@@ -387,6 +401,10 @@ function App() {
     return { low, high, min: low - 10, max: high + 8, feels, position, hue }
   }, [age, gender, height, hairstyle, outfit, weight])
 
+  const displayTemperature = (celsius) => Math.round(
+    temperatureUnit === 'C' ? celsius : celsius * 9 / 5 + 32,
+  )
+
   const selectedItems = Object.entries(outfit).flatMap(([type, selectedIds]) => {
     return selectedIds.flatMap((id) => {
       const selectedItem = clothing[type].options.find((item) => item.id === id)
@@ -400,12 +418,18 @@ function App() {
   }), {})
 
   function toggleClothing(type, selectedId) {
-    setOutfit((current) => ({
-      ...current,
-      [type]: current[type].includes(selectedId)
-        ? current[type].filter((id) => id !== selectedId)
-        : [...current[type], selectedId],
-    }))
+    setOutfit((current) => {
+      const currentSelection = current[type]
+      const isSelected = currentSelection.includes(selectedId)
+      if (!isSelected && currentSelection.length >= clothingSelectionLimits[type]) return current
+
+      return {
+        ...current,
+        [type]: isSelected
+          ? currentSelection.filter((id) => id !== selectedId)
+          : [...currentSelection, selectedId],
+      }
+    })
   }
 
   return (
@@ -441,13 +465,29 @@ function App() {
         </div>
         <div className="temperature-summary">
           <div className="feels-like">
-            <span className="metric-label">FEELS COMFIEST AT</span>
-            <span className="big-temp" style={{ '--temperature-hue': temperature.hue }}>{temperature.feels}<small>°C</small></span>
+            <div className="metric-heading">
+              <span className="metric-label">FEELS COMFIEST AT</span>
+              <div className="temperature-unit-switch" role="group" aria-label="Temperature unit">
+                {['C', 'F'].map((unit) => (
+                  <button
+                    key={unit}
+                    type="button"
+                    className={temperatureUnit === unit ? 'active' : ''}
+                    aria-label={unit === 'C' ? 'Celsius' : 'Fahrenheit'}
+                    aria-pressed={temperatureUnit === unit}
+                    onClick={() => setTemperatureUnit(unit)}
+                  >
+                    °{unit}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <span className="big-temp" style={{ '--temperature-hue': temperature.hue }}>{displayTemperature(temperature.feels)}<small>°{temperatureUnit}</small></span>
           </div>
           <div className="temp-range">
-            <div className="range-top"><span>Comfort zone</span><strong>{temperature.low}° — {temperature.high}°</strong></div>
+            <div className="range-top"><span>Comfort zone</span><strong>{displayTemperature(temperature.low)}° — {displayTemperature(temperature.high)}°{temperatureUnit}</strong></div>
             <div className="range-track" style={{ '--comfort-position': `${temperature.position}%` }}><span className="range-fill" /><i className="range-dot" /></div>
-            <div className="range-ends"><span>Could go as low as <b>{temperature.min}°</b></span><span>as high as <b>{temperature.max}°</b></span></div>
+            <div className="range-ends"><span>Could go as low as <b>{displayTemperature(temperature.min)}°{temperatureUnit}</b></span><span>as high as <b>{displayTemperature(temperature.max)}°{temperatureUnit}</b></span></div>
           </div>
         </div>
         <div className="weather-stamp" aria-hidden="true"><span>°</span><i /></div>
@@ -547,10 +587,10 @@ function App() {
             <h2>Choose your layers</h2>
           </div>
           <div className="option-stack">
-            <GarmentPicker type="head" selectedIds={outfit.head} onToggle={toggleClothing} />
-            <GarmentPicker type="upperbody" selectedIds={outfit.upperbody} onToggle={toggleClothing} />
-            <GarmentPicker type="lowerbody" selectedIds={outfit.lowerbody} onToggle={toggleClothing} />
-            <GarmentPicker type="feet" selectedIds={outfit.feet} onToggle={toggleClothing} />
+            <GarmentPicker type="head" selectedIds={outfit.head} onToggle={toggleClothing} maxItems={clothingSelectionLimits.head} />
+            <GarmentPicker type="upperbody" selectedIds={outfit.upperbody} onToggle={toggleClothing} maxItems={clothingSelectionLimits.upperbody} />
+            <GarmentPicker type="lowerbody" selectedIds={outfit.lowerbody} onToggle={toggleClothing} maxItems={clothingSelectionLimits.lowerbody} />
+            <GarmentPicker type="feet" selectedIds={outfit.feet} onToggle={toggleClothing} maxItems={clothingSelectionLimits.feet} />
           </div>
           <p className="layer-tip"><span aria-hidden="true">✳</span> Choose every layer you want; each item adds to your warmth estimate.</p>
 

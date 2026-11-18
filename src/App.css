@@ -203,6 +203,40 @@ p {
   gap: 4px;
 }
 
+.metric-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.temperature-unit-switch {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid #e4e9e1;
+  border-radius: 7px;
+  background: rgba(255, 254, 250, .72);
+}
+
+.temperature-unit-switch button {
+  padding: 4px 6px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #78867e;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.temperature-unit-switch button.active {
+  background: #527b5d;
+  color: #fff;
+}
+
 .metric-label {
   color: #89968c;
   font-size: 9px;
@@ -682,6 +716,16 @@ p {
   text-align: center;
 }
 
+.picker-limit-note {
+  margin: 0;
+  padding: 7px 8px;
+  border-radius: 5px;
+  background: #f7f0e2;
+  color: #886b3f;
+  font-size: 9px;
+  line-height: 1.4;
+}
+
 .picker-item {
   display: flex;
   min-height: 50px;
@@ -698,6 +742,13 @@ p {
 
 .picker-item.is-checked {
   background: #f5f7f1;
+}
+
+.picker-item.is-disabled,
+.picker-item.is-disabled:hover {
+  background: transparent;
+  cursor: not-allowed;
+  opacity: .48;
 }
 
 .picker-item input {
@@ -1060,6 +1111,20 @@ p {
   color: #a6b1a8;
 }
 
+:root[data-theme='dark'] .temperature-unit-switch {
+  border-color: #3b473f;
+  background: #171f1a;
+}
+
+:root[data-theme='dark'] .temperature-unit-switch button {
+  color: #a6b1a8;
+}
+
+:root[data-theme='dark'] .temperature-unit-switch button.active {
+  background: #3b5944;
+  color: #e2ebe4;
+}
+
 :root[data-theme='dark'] .range-track {
   background: linear-gradient(90deg, #46584b, #695e3f 52%, #705341);
 }
@@ -1136,6 +1201,11 @@ p {
 
 :root[data-theme='dark'] .picker-empty {
   color: #a4b0a7;
+}
+
+:root[data-theme='dark'] .picker-limit-note {
+  background: #3a3427;
+  color: #d3bb88;
 }
 
 :root[data-theme='dark'] .picker-item:hover {
@@ -1277,6 +1347,20 @@ p {
   color: #5f7064;
 }
 
+:root[data-theme='light'] .temperature-unit-switch {
+  border-color: #aebdae;
+  background: #f1f5ef;
+}
+
+:root[data-theme='light'] .temperature-unit-switch button {
+  color: #5f7064;
+}
+
+:root[data-theme='light'] .temperature-unit-switch button.active {
+  background: #527b5d;
+  color: #fff;
+}
+
 :root[data-theme='light'] .range-ends {
   color: #65756a;
 }
@@ -1359,6 +1443,11 @@ p {
 :root[data-theme='light'] .picker-item:hover,
 :root[data-theme='light'] .picker-item.is-checked {
   background: #e5eee3;
+}
+
+:root[data-theme='light'] .picker-limit-note {
+  background: #f0ead8;
+  color: #685a3b;
 }
 
 :root[data-theme='light'] .warmth-rating {
