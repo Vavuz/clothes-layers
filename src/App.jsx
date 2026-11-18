@@ -124,6 +124,9 @@ const clothingSelectionLimits = {
   feet: 5,
 }
 
+const MAX_WARMTH_EFFECT = 22
+const WARMTH_DECAY = 0.132
+
 function makeDefaultOutfit() {
   return {
     head: ['wool-beanie'],
@@ -390,12 +393,14 @@ function App() {
     }, 0)
     const hairWarmth = hairstyles.find((style) => style.id === hairstyle)?.warmth ?? 0
     const warmth = clothingWarmth + hairWarmth
+    const effectiveWarmth = MAX_WARMTH_EFFECT * (1 - Math.exp(-WARMTH_DECAY * warmth))
     const ageAdjustment = -Math.max(0, age - 65) * 0.02
     const heightAdjustment = (Math.pow(height / 170, 0.725) - 1) * 1.5
     const bodyAdjustment = (75 - weight) * 0.04 + (gender === 'woman' ? 1 : -1) + ageAdjustment + heightAdjustment
-    const low = Math.round(26 - warmth * 2.2 + bodyAdjustment)
+    const low = Math.round(26 - effectiveWarmth + bodyAdjustment)
     const high = low + 8
-    const position = Math.min(78, Math.max(22, Math.round(52 - (warmth - 2.9) * 6 + bodyAdjustment * 2)))
+    const effectiveLayers = effectiveWarmth / 2.2
+    const position = Math.min(78, Math.max(22, Math.round(52 - (effectiveLayers - 2.9) * 6 + bodyAdjustment * 2)))
     const feels = Math.round((low + high) / 2)
     const hue = Math.round(Math.max(0, Math.min(220, 220 - (feels - 5) * 7)))
     return { low, high, min: low - 10, max: high + 8, feels, position, hue }
