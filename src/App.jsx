@@ -124,8 +124,8 @@ const clothingSelectionLimits = {
   feet: 5,
 }
 
-const MAX_WARMTH_EFFECT = 22
-const WARMTH_DECAY = 0.132
+const MAX_WARMTH_EFFECT = 40
+const WARMTH_DECAY = 0.07
 
 function makeDefaultOutfit() {
   return {
